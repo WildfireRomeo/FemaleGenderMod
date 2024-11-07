@@ -27,17 +27,17 @@
 
 	"wildfire_gender.appearance_settings.title": "Uiterlijk instellingen",
 	"wildfire_gender.char_settings.title": "Karakter Instellingen",
-	"wildfire_gender.char_settings.physics": "Borst Zwaartekracht: %s",
+	"wildfire_gender.char_settings.physics": "Borst Bewegingen: %s",
 
-	"wildfire_gender.char_settings.override_armor_physics": "Harnas Zwaartekracht: %s",
-	"wildfire_gender.tooltip.override_armor_physics.line1": "Borst zwaartekracht zal niet langer onderdrukt worden bij jouw aangetrokken harnas, als dit aan staat",
+	"wildfire_gender.char_settings.override_armor_physics": "Beweegt in Harnas: %s",
+	"wildfire_gender.tooltip.override_armor_physics.line1": "De borst bewegingen zullen niet langer onderdrukt worden bij jouw aangetrokken harnas, als dit aan staat",
 	"wildfire_gender.tooltip.override_armor_physics.line2": "Dit is bedoeld voor het gebruik met bronpakketen die harnas verstoppen of iets in die geest",
 
 	"wildfire_gender.char_settings.hide_in_armor": "Verstop In Harnas: %s",
 	"wildfire_gender.char_settings.hurt_sounds": "Vrouwelijke Pijn Geluiden: %s",
 	"wildfire_gender.tooltip.hurt_sounds": "Jou karakter zal een vrouwelijke pijn geluid spelen als je schade neemt en als je geslacht is ingesteld op Vrouwelijk of Anders",
 
-	"wildfire_gender.breast_customization.dual_physics": "Dubbel-Zwaartekracht: %s",
+	"wildfire_gender.breast_customization.dual_physics": "Dubbele Bewegingen: %s",
 
 	"wildfire_gender.label.gender": "Geslacht",
 	"wildfire_gender.label.female": "Vrouwelijk",
@@ -52,8 +52,8 @@
 
 	"wildfire_gender.slider.bounce": "Verkracht Intensiteit: %s%%",
 	"wildfire_gender.slider.floppy": "Borst Momentum: %s%%",
-	"wildfire_gender.slider.min_bounce": "Waarom Is Zwaartekracht Aan?",
-	"wildfire_gender.slider.max_bounce": "Anime Borst Zwaartekracht!!!",
+	"wildfire_gender.slider.min_bounce": "Waarom Staan De Bewegingen Aan?",
+	"wildfire_gender.slider.max_bounce": "Anime Borst Bewegingen!!!",
 	"wildfire_gender.tooltip.bounce_warning": "Instelling 'Verkracht Intensiteit' op een hoog nummer ziet er erg niet natuurlijk uit!",
 
 	"wildfire_gender.cancer_awareness.title": "Hé, het is Borst Kanker Aandacht Maand",
