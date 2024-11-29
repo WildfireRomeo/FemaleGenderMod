@@ -24,8 +24,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonWriter;
 import com.wildfire.main.WildfireGender;
+import com.wildfire.main.WildfireHelper;
 import com.wildfire.main.config.keys.ConfigKey;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -38,7 +38,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 /**
- * Generic configuration implementation, storing key-value pairs from a JSON file.
+ * Generic configuration implementation, storing key-value pairs from a JSON file in {@link ConfigKey}s
  */
 public abstract class AbstractConfiguration extends ForwardingMap<String, ConfigKey<?>> {
 
@@ -63,10 +63,20 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 		this.file = saveDir.resolve(cfgName + ".json");
 	}
 
+	/**
+	 * Check if this configuration allows saving
+	 *
+	 * @implNote Defaults to {@link WildfireHelper#onClient()}
+	 *
+	 * @return {@code true} if this config allows loading and saving to/from disk
+	 */
 	public boolean supportsSaving() {
-		return FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER;
+		return WildfireHelper.onClient();
 	}
 
+	/**
+	 * Register a new {@link ConfigKey} for use in this configuration
+	 */
 	protected <TYPE, KEY extends ConfigKey<TYPE>> KEY register(KEY key) {
 		if(containsKey(key.getKey())) {
 			throw new IllegalArgumentException("Configuration key " + key.getKey() + " is already registered");
@@ -75,10 +85,16 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 		return key;
 	}
 
+	/**
+	 * @return {@code true} if the file for this config exists on disk
+	 */
 	public boolean exists() {
 		return file.toFile().exists();
 	}
 
+	/**
+	 * Saves the current config to its file on disk
+	 */
 	public void save() {
 		if(!supportsSaving()) return;
 		var json = toJson();
@@ -117,14 +133,12 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 		return Collections.unmodifiableMap(values);
 	}
 
-	@Deprecated
-	public final JsonObject json() {
-		return toJson();
-	}
-
+	/**
+	 * @return A new {@link JsonObject} containing all the values saved in this configuration
+	 */
 	public final JsonObject toJson() {
 		var json = new JsonObject();
-		this.values.values().forEach(v -> v.save(json));
+		this.values().forEach(v -> v.save(json));
 		return json;
 	}
 }

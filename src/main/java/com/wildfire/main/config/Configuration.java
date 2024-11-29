@@ -25,19 +25,15 @@ import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.keys.FloatConfigKey;
 import com.wildfire.main.config.keys.GenderConfigKey;
 
-import java.util.UUID;
-
 public class Configuration extends AbstractConfiguration {
 
-	public static final Configuration DEFAULTS = new Configuration();
 	private static final String CONFIG_DIR = "WildfireGender";
+	public static final Configuration DEFAULTS;
 
 	private final boolean allowSaving;
 
 	private Configuration() {
-		super(CONFIG_DIR, UUID.randomUUID().toString());
-		this.allowSaving = false;
-		values().forEach(ConfigKey::makeImmutable);
+		this("__DEFAULTS", false);
 	}
 
 	public Configuration(String cfgName, boolean allowSaving) {
@@ -66,5 +62,10 @@ public class Configuration extends AbstractConfiguration {
 	@Override
 	public boolean supportsSaving() {
 		return super.supportsSaving() && allowSaving;
+	}
+
+	static {
+		DEFAULTS = new Configuration();
+		DEFAULTS.values().forEach(ConfigKey::makeImmutable);
 	}
 }
