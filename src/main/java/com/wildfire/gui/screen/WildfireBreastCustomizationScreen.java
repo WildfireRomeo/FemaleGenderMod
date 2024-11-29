@@ -83,7 +83,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         int y = this.height / 2 - 11;
 
         PlayerConfig plr = Objects.requireNonNull(getPlayer(), "getPlayer()");
-        Configuration cfg = plr.getConfig();
+        Configuration cfg = plr.config();
         FloatConsumer onSave = value -> {
             //Just save as we updated the actual value in value change
             plr.save();
@@ -140,7 +140,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(this.btnBreastPhysics = new WildfireButton(this.width / 2 - 36, tabOffsetY - 2, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.physics", plr.hasBreastPhysics() ? ENABLED : DISABLED), button -> {
             boolean enablePhysics = !plr.hasBreastPhysics();
-            plr.updateBreastPhysics(enablePhysics);
+            plr.config().breastPhysics.set(enablePhysics);
 
             this.bounceSlider.active = plr.hasBreastPhysics();
             this.floppySlider.active = plr.hasBreastPhysics();
@@ -154,7 +154,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(this.btnDualPhysics = new WildfireButton(this.width / 2 - 36, tabOffsetY + 22, 166, 20,
                 Text.translatable("wildfire_gender.breast_customization.dual_physics", Text.translatable(cfg.breastsUniboob.get() ? "wildfire_gender.label.no" : "wildfire_gender.label.yes")), button -> {
             boolean isUniboob = !cfg.breastsUniboob.get();
-            plr.getConfig().breastsUniboob.set(isUniboob);
+            plr.config().breastsUniboob.set(isUniboob);
             button.setMessage(Text.translatable("wildfire_gender.breast_customization.dual_physics", Text.translatable(isUniboob ? "wildfire_gender.label.no" : "wildfire_gender.label.yes")));
             plr.save();
         }));
@@ -166,7 +166,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(btnOverrideArmorPhys = new WildfireButton(this.width / 2 - 36, tabOffsetY + 70, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.override_armor_physics", plr.getArmorPhysicsOverride() ? ENABLED : DISABLED), button -> {
             boolean enableArmorPhysicsOverride = !plr.getArmorPhysicsOverride();
-            plr.updateArmorPhysicsOverride(enableArmorPhysicsOverride);
+            plr.config().armorPhysicsOverride.set(enableArmorPhysicsOverride);
             button.setMessage(Text.translatable("wildfire_gender.char_settings.override_armor_physics", plr.getArmorPhysicsOverride() ? ENABLED : DISABLED));
             plr.save();
         }, Tooltip.of(Text.translatable("wildfire_gender.tooltip.override_armor_physics.line1")
@@ -196,7 +196,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(this.btnHurtSounds = new WildfireButton(this.width / 2 - 36, tabOffsetY - 2, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.hurt_sounds", plr.hasHurtSounds() ? ENABLED : DISABLED), button -> {
             boolean enableHurtSounds = !plr.hasHurtSounds();
-            plr.updateHurtSounds(enableHurtSounds);
+            plr.config().hurtSounds.set(enableHurtSounds);
             voicePitchSlider.active = plr.hasHurtSounds();
             button.setMessage(Text.translatable("wildfire_gender.char_settings.hurt_sounds", enableHurtSounds ? ENABLED : DISABLED));
             plr.save();
@@ -220,7 +220,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(btnHideInArmor = new WildfireButton(this.width / 2 - 36, tabOffsetY + 46, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.hide_in_armor", plr.showBreastsInArmor() ? DISABLED : ENABLED), button -> {
             boolean enableShowInArmor = !plr.showBreastsInArmor();
-            plr.updateShowBreastsInArmor(enableShowInArmor);
+            plr.config().showInArmor.set(enableShowInArmor);
             button.setMessage(Text.translatable("wildfire_gender.char_settings.hide_in_armor", enableShowInArmor ? DISABLED : ENABLED));
             plr.save();
         }));

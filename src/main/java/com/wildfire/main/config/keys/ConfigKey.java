@@ -20,7 +20,6 @@ package com.wildfire.main.config.keys;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wildfire.main.WildfireGender;
 import org.jetbrains.annotations.ApiStatus;
 
 public abstract class ConfigKey<TYPE> {
@@ -50,7 +49,9 @@ public abstract class ConfigKey<TYPE> {
     }
 
     public void set(TYPE value) {
-        if(isImmutable) return;
+        if(isImmutable) {
+            throw new UnsupportedOperationException("Immutable keys may not be modified");
+        }
         if(validate(value)) this.value = value;
     }
 
@@ -73,7 +74,6 @@ public abstract class ConfigKey<TYPE> {
 
     @ApiStatus.Internal
     public final void makeImmutable() {
-        WildfireGender.LOGGER.info("Marking {} as immutable", key);
         this.isImmutable = true;
     }
 }

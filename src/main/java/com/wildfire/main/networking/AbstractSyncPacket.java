@@ -67,12 +67,12 @@ abstract class AbstractSyncPacket {
     }
 
     protected void updatePlayerFromPacket(PlayerConfig plr) {
-        plr.updateGender(gender);
-        plr.updateBustSize(bustSize);
-        plr.updateHurtSounds(hurtSounds);
-        plr.updateVoicePitch(voicePitch);
+        plr.config().gender.set(gender);
+        plr.config().bustSize.set(bustSize);
+        plr.config().hurtSounds.set(hurtSounds);
+        plr.config().voicePitch.set(voicePitch);
         physics.applyTo(plr);
-        Breasts.applyTo(plr.getConfig(), breasts);
+        Breasts.applyTo(plr.config(), breasts);
     }
 
     protected record BreastPhysics(boolean physics, boolean showInArmor, float bounceMultiplier, float floppyMultiplier) {
@@ -90,10 +90,10 @@ abstract class AbstractSyncPacket {
         }
 
         private void applyTo(PlayerConfig plr) {
-            plr.updateBreastPhysics(physics);
-            plr.updateShowBreastsInArmor(showInArmor);
-            plr.updateBounceMultiplier(bounceMultiplier);
-            plr.updateFloppiness(floppyMultiplier);
+            plr.config().breastPhysics.set(physics);
+            plr.config().showInArmor.set(showInArmor);
+            plr.config().bounceMultiplier.set(bounceMultiplier);
+            plr.config().floppyMultiplier.set(floppyMultiplier);
         }
     }
 

@@ -46,8 +46,6 @@ import java.util.UUID;
 /**
  * <p>A stripped down version of a {@link PlayerConfig player's config}, intended for use with non-player entities.</p>
  *
- * <p>Unlike players, this has very minimal configuration support.</p>
- *
  * <p>Currently only used for {@link ArmorStandEntity armor stands}, and as a superclass for {@link PlayerConfig player configs}.</p>
  */
 public class EntityConfig {
@@ -63,9 +61,6 @@ public class EntityConfig {
 
 	public final UUID uuid;
 	protected final Configuration cfg;
-
-	// note: hurt sounds, armor physics override, and show in armor are not defined here, as they have no relevance
-	// to entities, and are instead entirely in PlayerConfig
 
 	// TODO ideally these physics objects would be made entirely client-sided, but this class is
 	//      used on both the client and server (primarily through PlayerConfig), making it very
@@ -110,7 +105,7 @@ public class EntityConfig {
 		}
 
 		float size;
-		cfg.physics.set(false);
+		cfg.breastPhysics.set(false);
 		cfg.bustSize.set(size = fromComponent.breastSize());
 		cfg.gender.set(size >= 0.02f ? Gender.FEMALE : Gender.MALE);
 		cfg.breastsCleavage.set(fromComponent.cleavage());
@@ -147,15 +142,15 @@ public class EntityConfig {
 	}
 
 	public boolean hasBreastPhysics() {
-		return cfg.physics.get();
+		return cfg.breastPhysics.get();
 	}
 
 	public boolean getArmorPhysicsOverride() {
-		return false;
+		return cfg.armorPhysicsOverride.get();
 	}
 
 	public boolean showBreastsInArmor() {
-		return true;
+		return cfg.showInArmor.get();
 	}
 
 	public float getBounceMultiplier() {

@@ -90,7 +90,7 @@ public class WardrobeBrowserScreen extends BaseWildfireScreen {
 				case FEMALE -> Gender.OTHER;
 				case OTHER -> Gender.MALE;
 			};
-			plr.updateGender(gender);
+			plr.config().gender.set(gender);
 			plr.save();
 			button.setMessage(getGenderLabel(gender));
 			clearAndInit();

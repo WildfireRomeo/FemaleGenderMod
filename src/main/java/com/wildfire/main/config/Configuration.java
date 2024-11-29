@@ -55,7 +55,7 @@ public class Configuration extends AbstractConfiguration {
 	public final ConfigKey<Boolean> breastsUniboob = register(new BooleanConfigKey("breasts_uniboob", true));
 	public final ConfigKey<Float> breastsCleavage = register(new FloatConfigKey("breasts_cleavage", 0, 0, 0.1F));
 
-	public final ConfigKey<Boolean> physics = register(new BooleanConfigKey("breast_physics", true));
+	public final ConfigKey<Boolean> breastPhysics = register(new BooleanConfigKey("breast_physics", true));
 	public final ConfigKey<Boolean> armorPhysicsOverride = register(new BooleanConfigKey("armor_physics_override", false));
 	public final ConfigKey<Boolean> showInArmor = register(new BooleanConfigKey("show_in_armor", true));
 	public final ConfigKey<Float> bounceMultiplier = register(new FloatConfigKey("bounce_multiplier", 0.333F, 0, 0.5f));
