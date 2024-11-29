@@ -24,6 +24,7 @@ import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.codecs.PrimitiveCodec;
 import com.wildfire.api.IGenderArmor;
 import com.wildfire.api.WildfireAPI;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.keys.FloatConfigKey;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.component.DataComponentTypes;
@@ -86,6 +87,10 @@ public final class WildfireHelper {
 
     public static Codec<Float> boundedFloat(float minInclusive, float maxInclusive) {
         return Codec.FLOAT.xmap(val -> MathHelper.clamp(val, minInclusive, maxInclusive), Function.identity());
+    }
+
+    public static Codec<Float> boundedFloat(ConfigKey<Float> configKey) {
+        return boundedFloat(((FloatConfigKey) configKey).getMinInclusive(), ((FloatConfigKey) configKey).getMaxInclusive());
     }
 
     public static Codec<Float> boundedFloat(FloatConfigKey configKey) {

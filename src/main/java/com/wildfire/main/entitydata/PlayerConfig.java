@@ -20,14 +20,12 @@ package com.wildfire.main.entitydata;
 
 import com.google.gson.JsonObject;
 import com.wildfire.main.WildfireGender;
-import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.Configuration;
 import com.wildfire.main.config.enums.Gender;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * A version of {@link EntityConfig} backed by a {@link Configuration} for use with players
@@ -38,40 +36,8 @@ public class PlayerConfig extends EntityConfig {
 	public boolean needsCloudSync;
 	public SyncStatus syncStatus = SyncStatus.UNKNOWN;
 
-	private final Configuration cfg;
-	protected boolean hurtSounds = Configuration.HURT_SOUNDS.getDefault();
-	protected boolean armorPhysOverride = Configuration.ARMOR_PHYSICS_OVERRIDE.getDefault();
-	protected boolean showBreastsInArmor = Configuration.SHOW_IN_ARMOR.getDefault();
-
-	/**
-	 * @deprecated Use {@link #updateGender(Gender)} instead
-	 */
-	@Deprecated
-	public PlayerConfig(UUID uuid, Gender gender) {
-		this(uuid);
-		updateGender(gender);
-	}
-
 	public PlayerConfig(UUID uuid) {
-		super(uuid);
-		this.cfg = new Configuration(this.uuid.toString());
-		this.cfg.set(Configuration.USERNAME, this.uuid);
-		this.cfg.setDefault(Configuration.GENDER);
-		this.cfg.setDefault(Configuration.BUST_SIZE);
-		this.cfg.setDefault(Configuration.HURT_SOUNDS);
-
-		this.cfg.setDefault(Configuration.BREASTS_OFFSET_X);
-		this.cfg.setDefault(Configuration.BREASTS_OFFSET_Y);
-		this.cfg.setDefault(Configuration.BREASTS_OFFSET_Z);
-		this.cfg.setDefault(Configuration.BREASTS_UNIBOOB);
-		this.cfg.setDefault(Configuration.BREASTS_CLEAVAGE);
-
-		this.cfg.setDefault(Configuration.BREAST_PHYSICS);
-		this.cfg.setDefault(Configuration.ARMOR_PHYSICS_OVERRIDE);
-		this.cfg.setDefault(Configuration.SHOW_IN_ARMOR);
-		this.cfg.setDefault(Configuration.BOUNCE_MULTIPLIER);
-		this.cfg.setDefault(Configuration.FLOPPY_MULTIPLIER);
-		this.cfg.setDefault(Configuration.VOICE_PITCH);
+		super(uuid, new Configuration(uuid.toString(), true));
 	}
 
 	// this shouldn't ever be called on players, but just to be safe, override with a noop.
@@ -82,60 +48,52 @@ public class PlayerConfig extends EntityConfig {
 		return cfg;
 	}
 
-	private <VALUE> boolean updateValue(ConfigKey<VALUE> key, VALUE value, Consumer<VALUE> setter) {
-		if (key.validate(value)) {
-			setter.accept(value);
-			return true;
-		}
-		return false;
+	public void updateGender(Gender value) {
+		cfg.gender.set(value);
 	}
 
-	public boolean updateGender(Gender value) {
-		return updateValue(Configuration.GENDER, value, v -> this.gender = v);
-	}
-
-	public boolean updateBustSize(float value) {
-		return updateValue(Configuration.BUST_SIZE, value, v -> this.pBustSize = v);
+	public void updateBustSize(float value) {
+		cfg.bustSize.set(value);
 	}
 
 	public boolean hasHurtSounds() {
-		return hurtSounds;
+		return cfg.hurtSounds.get();
 	}
 
-	public boolean updateVoicePitch(float value) {
-		return updateValue(Configuration.VOICE_PITCH, value, v -> this.voicePitch = v);
+	public void updateVoicePitch(float value) {
+		cfg.voicePitch.set(value);
 	}
 
-	public boolean updateHurtSounds(boolean value) {
-		return updateValue(Configuration.HURT_SOUNDS, value, v -> this.hurtSounds = v);
+	public void updateHurtSounds(boolean value) {
+		cfg.hurtSounds.set(value);
 	}
 
-	public boolean updateBreastPhysics(boolean value) {
-		return updateValue(Configuration.BREAST_PHYSICS, value, v -> this.breastPhysics = v);
+	public void updateBreastPhysics(boolean value) {
+		cfg.physics.set(value);
 	}
 
 	public boolean getArmorPhysicsOverride() {
-		return armorPhysOverride;
+		return cfg.armorPhysicsOverride.get();
 	}
 
-	public boolean updateArmorPhysicsOverride(boolean value) {
-		return updateValue(Configuration.ARMOR_PHYSICS_OVERRIDE, value, v -> this.armorPhysOverride = v);
+	public void updateArmorPhysicsOverride(boolean value) {
+		cfg.armorPhysicsOverride.set(value);
 	}
 
 	public boolean showBreastsInArmor() {
-		return showBreastsInArmor;
+		return cfg.showInArmor.get();
 	}
 
-	public boolean updateShowBreastsInArmor(boolean value) {
-		return updateValue(Configuration.SHOW_IN_ARMOR, value, v -> this.showBreastsInArmor = v);
+	public void updateShowBreastsInArmor(boolean value) {
+		cfg.showInArmor.set(value);
 	}
 
-	public boolean updateBounceMultiplier(float value) {
-		return updateValue(Configuration.BOUNCE_MULTIPLIER, value, v -> this.bounceMultiplier = v);
+	public void updateBounceMultiplier(float value) {
+		cfg.bounceMultiplier.set(value);
 	}
 
-	public boolean updateFloppiness(float value) {
-		return updateValue(Configuration.FLOPPY_MULTIPLIER, value, v -> this.floppyMultiplier = v);
+	public void updateFloppiness(float value) {
+		cfg.floppyMultiplier.set(value);
 	}
 
 	public SyncStatus getSyncStatus() {
@@ -151,7 +109,7 @@ public class PlayerConfig extends EntityConfig {
 	}
 
 	public JsonObject toJson() {
-		return cfg.json().deepCopy();
+		return cfg.toJson();
 	}
 
 	public boolean hasLocalConfig() {
@@ -161,28 +119,6 @@ public class PlayerConfig extends EntityConfig {
 	public void loadFromDisk(boolean markForSync) {
 		this.syncStatus = SyncStatus.CACHED;
 		cfg.load();
-		loadFromConfig(markForSync);
-	}
-
-	public void loadFromConfig(boolean markForSync) {
-		updateGender(cfg.get(Configuration.GENDER));
-		updateBustSize(cfg.get(Configuration.BUST_SIZE));
-		updateHurtSounds(cfg.get(Configuration.HURT_SOUNDS));
-		updateVoicePitch(cfg.get(Configuration.VOICE_PITCH));
-
-		//physics
-		updateBreastPhysics(cfg.get(Configuration.BREAST_PHYSICS));
-		updateShowBreastsInArmor(cfg.get(Configuration.SHOW_IN_ARMOR));
-		updateArmorPhysicsOverride(cfg.get(Configuration.ARMOR_PHYSICS_OVERRIDE));
-		updateBounceMultiplier(cfg.get(Configuration.BOUNCE_MULTIPLIER));
-		updateFloppiness(cfg.get(Configuration.FLOPPY_MULTIPLIER));
-
-		breasts.updateXOffset(cfg.get(Configuration.BREASTS_OFFSET_X));
-		breasts.updateYOffset(cfg.get(Configuration.BREASTS_OFFSET_Y));
-		breasts.updateZOffset(cfg.get(Configuration.BREASTS_OFFSET_Z));
-		breasts.updateUniboob(cfg.get(Configuration.BREASTS_UNIBOOB));
-		breasts.updateCleavage(cfg.get(Configuration.BREASTS_CLEAVAGE));
-
 		if(markForSync) {
 			this.needsSync = true;
 		}
@@ -200,30 +136,10 @@ public class PlayerConfig extends EntityConfig {
 		return plr;
 	}
 
-	public static void saveGenderInfo(PlayerConfig plr) {
-		Configuration config = plr.getConfig();
-		config.set(Configuration.USERNAME, plr.uuid);
-		config.set(Configuration.GENDER, plr.getGender());
-		config.set(Configuration.BUST_SIZE, plr.getBustSize());
-		config.set(Configuration.HURT_SOUNDS, plr.hasHurtSounds());
-		config.set(Configuration.VOICE_PITCH, plr.getVoicePitch());
-
-		//physics
-		config.set(Configuration.BREAST_PHYSICS, plr.hasBreastPhysics());
-		config.set(Configuration.SHOW_IN_ARMOR, plr.showBreastsInArmor());
-		config.set(Configuration.ARMOR_PHYSICS_OVERRIDE, plr.getArmorPhysicsOverride());
-		config.set(Configuration.BOUNCE_MULTIPLIER, plr.getBounceMultiplier());
-		config.set(Configuration.FLOPPY_MULTIPLIER, plr.getFloppiness());
-
-		config.set(Configuration.BREASTS_OFFSET_X, plr.getBreasts().getXOffset());
-		config.set(Configuration.BREASTS_OFFSET_Y, plr.getBreasts().getYOffset());
-		config.set(Configuration.BREASTS_OFFSET_Z, plr.getBreasts().getZOffset());
-		config.set(Configuration.BREASTS_UNIBOOB, plr.getBreasts().isUniboob());
-		config.set(Configuration.BREASTS_CLEAVAGE, plr.getBreasts().getCleavage());
-
-		config.save();
-		plr.needsSync = true;
-		plr.needsCloudSync = true;
+	public void save() {
+		cfg.save();
+		this.needsSync = true;
+		this.needsCloudSync = true;
 	}
 
 	@Override
@@ -232,8 +148,7 @@ public class PlayerConfig extends EntityConfig {
 	}
 
 	public void updateFromJson(JsonObject json) {
-		json.asMap().forEach(this.cfg.json()::add);
-		loadFromConfig(false);
+		this.cfg.apply(json);
 		this.syncStatus = SyncStatus.SYNCED;
 	}
 

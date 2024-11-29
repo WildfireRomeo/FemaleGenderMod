@@ -30,22 +30,22 @@ public record BreastDataComponent(float breastSize, float cleavage, Vector3f off
 
 	private static final String KEY = "WildfireGender";
 	private static final Codec<BreastDataComponent> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			WildfireHelper.boundedFloat(Configuration.BUST_SIZE)
+			WildfireHelper.boundedFloat(Configuration.DEFAULTS.bustSize)
 					.optionalFieldOf("BreastSize", 0f)
 					.forGetter(BreastDataComponent::breastSize),
-			WildfireHelper.boundedFloat(Configuration.BREASTS_CLEAVAGE)
-					.optionalFieldOf("Cleavage", Configuration.BREASTS_CLEAVAGE.getDefault())
+			WildfireHelper.boundedFloat(Configuration.DEFAULTS.breastsCleavage)
+					.optionalFieldOf("Cleavage", Configuration.DEFAULTS.breastsCleavage.getDefault())
 					.forGetter(BreastDataComponent::cleavage),
 			Codec.BOOL
 					.optionalFieldOf("Jacket", true)
 					.forGetter(BreastDataComponent::jacket),
-			WildfireHelper.boundedFloat(Configuration.BREASTS_OFFSET_X)
+			WildfireHelper.boundedFloat(Configuration.DEFAULTS.breastsXOffset)
 					.optionalFieldOf("XOffset", 0f)
 					.forGetter(component -> component.offsets.x),
-			WildfireHelper.boundedFloat(Configuration.BREASTS_OFFSET_Y)
+			WildfireHelper.boundedFloat(Configuration.DEFAULTS.breastsYOffset)
 					.optionalFieldOf("YOffset", 0f)
 					.forGetter(component -> component.offsets.y),
-			WildfireHelper.boundedFloat(Configuration.BREASTS_OFFSET_Z)
+			WildfireHelper.boundedFloat(Configuration.DEFAULTS.breastsZOffset)
 					.optionalFieldOf("ZOffset", 0f)
 					.forGetter(component -> component.offsets.y)
 		).apply(instance, (breastSize, cleavage, jacket, x, y, z) -> new BreastDataComponent(breastSize, cleavage, new Vector3f(x, y, z), jacket, null))
@@ -57,7 +57,7 @@ public record BreastDataComponent(float breastSize, float cleavage, Vector3f off
 			return null;
 		}
 
-		return new BreastDataComponent(config.getBustSize(), config.getBreasts().getCleavage(), config.getBreasts().getOffsets(),
+		return new BreastDataComponent(config.getBustSize(), config.getBreasts().cleavage(), new Vector3f(config.getBreasts().offset()),
 				player.isPartVisible(PlayerModelPart.JACKET), null);
 	}
 

@@ -41,7 +41,7 @@ public class EnumConfigKey<TYPE extends Enum<TYPE>> extends ConfigKey<TYPE> {
 	}
 
 	@Override
-	public void save(JsonObject object, TYPE value) {
+	public void save(JsonObject object) {
 		object.addProperty(key, value.ordinal());
 	}
 }

@@ -19,6 +19,7 @@
 package com.wildfire.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.keys.FloatConfigKey;
 import it.unimi.dsi.fastutil.floats.Float2ObjectFunction;
 import it.unimi.dsi.fastutil.floats.FloatConsumer;
@@ -48,6 +49,13 @@ public class WildfireSlider extends ClickableWidget {
 	private boolean changed;
 
 	private double arrowKeyStep = 0.05;
+
+	public WildfireSlider(int xPos, int yPos, int width, int height, ConfigKey<Float> config, Float2ObjectFunction<Text> messageUpdate, FloatConsumer onSave) {
+		this(xPos, yPos, width, height,
+				((FloatConfigKey) config).getMinInclusive(), ((FloatConfigKey) config).getMaxInclusive(),
+				config.get(), config::set,
+				messageUpdate, onSave);
+	}
 
 	public WildfireSlider(int xPos, int yPos, int width, int height, FloatConfigKey config, double currentVal, FloatConsumer valueUpdate,
 	                      Float2ObjectFunction<Text> messageUpdate, FloatConsumer onSave) {

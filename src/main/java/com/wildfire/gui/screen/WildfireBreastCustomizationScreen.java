@@ -24,7 +24,6 @@ import com.wildfire.gui.WildfireButton;
 import com.wildfire.gui.WildfireSlider;
 import com.wildfire.main.config.enums.Gender;
 import com.wildfire.main.WildfireGender;
-import com.wildfire.main.entitydata.Breasts;
 import com.wildfire.main.entitydata.PlayerConfig;
 import com.wildfire.main.config.Configuration;
 import com.wildfire.main.config.BreastPresetConfiguration;
@@ -81,20 +80,17 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
 
     @Override
     public void init() {
-        int j = this.height / 2 - 11;
-
-        int xPos = this.width / 2;
-        int yPos = this.height / 2;
+        int y = this.height / 2 - 11;
 
         PlayerConfig plr = Objects.requireNonNull(getPlayer(), "getPlayer()");
-        Breasts breasts = plr.getBreasts();
+        Configuration cfg = plr.getConfig();
         FloatConsumer onSave = value -> {
             //Just save as we updated the actual value in value change
-            PlayerConfig.saveGenderInfo(plr);
+            plr.save();
         };
 
         //Customization Tab
-        this.addDrawableChild(btnCustomization = new WildfireButton(this.width / 2 - 130, j - 52, 172/2 - 2, 12,
+        this.addDrawableChild(btnCustomization = new WildfireButton(this.width / 2 - 130, y - 52, 172/2 - 2, 12,
                 Text.translatable("wildfire_gender.breast_customization.tab_customization"), button -> {
             currentTab = 0;
             updateTabs();
@@ -102,7 +98,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         })).setActive(false);
 
         //Breast Physics Tab
-        this.addDrawableChild(btnPhysics = new WildfireButton(this.width / 2 - 42, j - 52, 172 / 2 - 2, 12,
+        this.addDrawableChild(btnPhysics = new WildfireButton(this.width / 2 - 42, y - 52, 172 / 2 - 2, 12,
                 Text.translatable("wildfire_gender.breast_customization.tab_physics"), button -> {
 
             currentTab = 1;
@@ -111,7 +107,7 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         }));
 
         //Miscellaneous
-        this.addDrawableChild(btnMiscellaneous = new WildfireButton(this.width / 2 + 46, j - 52, 172 / 2 - 2, 12,
+        this.addDrawableChild(btnMiscellaneous = new WildfireButton(this.width / 2 + 46, y - 52, 172 / 2 - 2, 12,
                 Text.translatable("wildfire_gender.breast_customization.tab_miscellaneous"), button -> {
 
             currentTab = 2;
@@ -120,23 +116,23 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         }));
 
         //Customization Tab Below
-        int tabOffsetY = j-3 - 21;
+        int tabOffsetY = y-3 - 21;
 
-        this.addDrawableChild(this.breastSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY - 2, 166, 20, Configuration.BUST_SIZE, plr.getBustSize(),
-              plr::updateBustSize, value -> Text.translatable("wildfire_gender.wardrobe.slider.breast_size", Math.round(value * 1.25f * 100)), onSave));
+        this.addDrawableChild(this.breastSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY - 2, 166, 20, cfg.bustSize,
+              value -> Text.translatable("wildfire_gender.wardrobe.slider.breast_size", Math.round(value * 1.25f * 100)), onSave));
         this.breastSlider.setArrowKeyStep(0.01);
 
         //Customization
-        this.addDrawableChild(this.xOffsetBoobSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 22, 166 / 2 - 2, 20, Configuration.BREASTS_OFFSET_X, breasts.getXOffset(),
-              breasts::updateXOffset, value -> Text.translatable("wildfire_gender.wardrobe.slider.separation", Math.round((Math.round(value * 100f) / 100f) * 10)), onSave));
-        this.addDrawableChild(this.yOffsetBoobSlider = new WildfireSlider(this.width / 2 - 36 + 166/2 + 2, tabOffsetY + 22, 166 / 2 - 2, 20, Configuration.BREASTS_OFFSET_Y, breasts.getYOffset(),
-              breasts::updateYOffset, value -> Text.translatable("wildfire_gender.wardrobe.slider.height", Math.round((Math.round(value * 100f) / 100f) * 10)), onSave));
+        this.addDrawableChild(this.xOffsetBoobSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 22, 166 / 2 - 2, 20, cfg.breastsXOffset,
+              value -> Text.translatable("wildfire_gender.wardrobe.slider.separation", Math.round((Math.round(value * 100f) / 100f) * 10)), onSave));
+        this.addDrawableChild(this.yOffsetBoobSlider = new WildfireSlider(this.width / 2 - 36 + 166/2 + 2, tabOffsetY + 22, 166 / 2 - 2, 20, cfg.breastsYOffset,
+              value -> Text.translatable("wildfire_gender.wardrobe.slider.height", Math.round((Math.round(value * 100f) / 100f) * 10)), onSave));
 
-        this.addDrawableChild(this.zOffsetBoobSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 46, 166 / 2 - 2, 20, Configuration.BREASTS_OFFSET_Z, breasts.getZOffset(),
-              breasts::updateZOffset, value -> Text.translatable("wildfire_gender.wardrobe.slider.depth", Math.round((Math.round(value * 100f) / 100f) * 10)), onSave));
+        this.addDrawableChild(this.zOffsetBoobSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 46, 166 / 2 - 2, 20, cfg.breastsZOffset,
+              value -> Text.translatable("wildfire_gender.wardrobe.slider.depth", Math.round((Math.round(value * 100f) / 100f) * 10)), onSave));
         this.zOffsetBoobSlider.setArrowKeyStep(0.1);
-        this.addDrawableChild(this.cleavageSlider = new WildfireSlider(this.width / 2 - 36 + 166/2 + 2, tabOffsetY + 46, 166 / 2 - 2, 20, Configuration.BREASTS_CLEAVAGE, breasts.getCleavage(),
-              breasts::updateCleavage, value -> Text.translatable("wildfire_gender.wardrobe.slider.rotation", Math.round((Math.round(value * 100f) / 100f) * 100)), onSave));
+        this.addDrawableChild(this.cleavageSlider = new WildfireSlider(this.width / 2 - 36 + 166/2 + 2, tabOffsetY + 46, 166 / 2 - 2, 20, cfg.breastsCleavage,
+              value -> Text.translatable("wildfire_gender.wardrobe.slider.rotation", Math.round((Math.round(value * 100f) / 100f) * 100)), onSave));
         this.cleavageSlider.setArrowKeyStep(0.1);
 
         //Breast Physics Tab
@@ -144,25 +140,23 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(this.btnBreastPhysics = new WildfireButton(this.width / 2 - 36, tabOffsetY - 2, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.physics", plr.hasBreastPhysics() ? ENABLED : DISABLED), button -> {
             boolean enablePhysics = !plr.hasBreastPhysics();
-            if (plr.updateBreastPhysics(enablePhysics)) {
+            plr.updateBreastPhysics(enablePhysics);
 
-                this.bounceSlider.active = plr.hasBreastPhysics();
-                this.floppySlider.active = plr.hasBreastPhysics();
-                this.btnOverrideArmorPhys.active = plr.hasBreastPhysics();
-                this.btnDualPhysics.active = plr.hasBreastPhysics();
+            this.bounceSlider.active = plr.hasBreastPhysics();
+            this.floppySlider.active = plr.hasBreastPhysics();
+            this.btnOverrideArmorPhys.active = plr.hasBreastPhysics();
+            this.btnDualPhysics.active = plr.hasBreastPhysics();
 
-                button.setMessage(Text.translatable("wildfire_gender.char_settings.physics", enablePhysics ? ENABLED : DISABLED));
-                PlayerConfig.saveGenderInfo(plr);
-            }
+            button.setMessage(Text.translatable("wildfire_gender.char_settings.physics", enabled(enablePhysics)));
+            plr.save();
         }));
 
         this.addDrawableChild(this.btnDualPhysics = new WildfireButton(this.width / 2 - 36, tabOffsetY + 22, 166, 20,
-                Text.translatable("wildfire_gender.breast_customization.dual_physics", Text.translatable(breasts.isUniboob() ? "wildfire_gender.label.no" : "wildfire_gender.label.yes")), button -> {
-            boolean isUniboob = !breasts.isUniboob();
-            if (breasts.updateUniboob(isUniboob)) {
-                button.setMessage(Text.translatable("wildfire_gender.breast_customization.dual_physics", Text.translatable(isUniboob ? "wildfire_gender.label.no" : "wildfire_gender.label.yes")));
-                PlayerConfig.saveGenderInfo(plr);
-            }
+                Text.translatable("wildfire_gender.breast_customization.dual_physics", Text.translatable(cfg.breastsUniboob.get() ? "wildfire_gender.label.no" : "wildfire_gender.label.yes")), button -> {
+            boolean isUniboob = !cfg.breastsUniboob.get();
+            plr.getConfig().breastsUniboob.set(isUniboob);
+            button.setMessage(Text.translatable("wildfire_gender.breast_customization.dual_physics", Text.translatable(isUniboob ? "wildfire_gender.label.no" : "wildfire_gender.label.yes")));
+            plr.save();
         }));
         this.btnDualPhysics.active = plr.hasBreastPhysics();
 
@@ -172,36 +166,26 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(btnOverrideArmorPhys = new WildfireButton(this.width / 2 - 36, tabOffsetY + 70, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.override_armor_physics", plr.getArmorPhysicsOverride() ? ENABLED : DISABLED), button -> {
             boolean enableArmorPhysicsOverride = !plr.getArmorPhysicsOverride();
-            if (plr.updateArmorPhysicsOverride(enableArmorPhysicsOverride )) {
-                button.setMessage(Text.translatable("wildfire_gender.char_settings.override_armor_physics", plr.getArmorPhysicsOverride() ? ENABLED : DISABLED));
-                PlayerConfig.saveGenderInfo(plr);
-            }
+            plr.updateArmorPhysicsOverride(enableArmorPhysicsOverride);
+            button.setMessage(Text.translatable("wildfire_gender.char_settings.override_armor_physics", plr.getArmorPhysicsOverride() ? ENABLED : DISABLED));
+            plr.save();
         }, Tooltip.of(Text.translatable("wildfire_gender.tooltip.override_armor_physics.line1")
                 .append("\n\n")
                 .append(Text.translatable("wildfire_gender.tooltip.override_armor_physics.line2")))
         ));
         this.btnOverrideArmorPhys.active = plr.hasBreastPhysics();
 
-        this.addDrawableChild(this.bounceSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 46, 166 / 2 - 2, 20, Configuration.BOUNCE_MULTIPLIER, plr.getBounceMultiplier(), value -> {
-        }, value -> {
+        this.addDrawableChild(this.bounceSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 46, 166 / 2 - 2, 20, cfg.bounceMultiplier, value -> {
             float bounceText = 3 * value;
             int v = Math.round(bounceText * 100);
             //bounceWarning = v > 100;
             return Text.translatable("wildfire_gender.slider.bounce", v);
-        }, value -> {
-            if (plr.updateBounceMultiplier(value)) {
-                PlayerConfig.saveGenderInfo(plr);
-            }
-        }));
+        }, value -> plr.save()));
         this.bounceSlider.active = plr.hasBreastPhysics();
         this.bounceSlider.setArrowKeyStep(0.005);
 
-        this.addDrawableChild(this.floppySlider = new WildfireSlider(this.width / 2 - 36 + 166/2 + 2, tabOffsetY + 46, 166 / 2 - 2, 20, Configuration.FLOPPY_MULTIPLIER, plr.getFloppiness(), value -> {
-        }, value -> Text.translatable("wildfire_gender.slider.floppy", Math.round(value * 100)), value -> {
-            if (plr.updateFloppiness(value)) {
-                PlayerConfig.saveGenderInfo(plr);
-            }
-        }));
+        this.addDrawableChild(this.floppySlider = new WildfireSlider(this.width / 2 - 36 + 166/2 + 2, tabOffsetY + 46, 166 / 2 - 2, 20, cfg.floppyMultiplier,
+                value -> Text.translatable("wildfire_gender.slider.floppy", Math.round(value * 100)), value -> plr.save()));
         this.floppySlider.active = plr.hasBreastPhysics();
         this.floppySlider.setArrowKeyStep(0.01);
 
@@ -212,40 +196,37 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         this.addDrawableChild(this.btnHurtSounds = new WildfireButton(this.width / 2 - 36, tabOffsetY - 2, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.hurt_sounds", plr.hasHurtSounds() ? ENABLED : DISABLED), button -> {
             boolean enableHurtSounds = !plr.hasHurtSounds();
-            if (plr.updateHurtSounds(enableHurtSounds)) {
-                voicePitchSlider.active = plr.hasHurtSounds();
-                button.setMessage(Text.translatable("wildfire_gender.char_settings.hurt_sounds", enableHurtSounds ? ENABLED : DISABLED));
-                PlayerConfig.saveGenderInfo(plr);
-            }
+            plr.updateHurtSounds(enableHurtSounds);
+            voicePitchSlider.active = plr.hasHurtSounds();
+            button.setMessage(Text.translatable("wildfire_gender.char_settings.hurt_sounds", enableHurtSounds ? ENABLED : DISABLED));
+            plr.save();
         }, Tooltip.of(Text.translatable("wildfire_gender.tooltip.hurt_sounds"))));
 
-        this.addDrawableChild(this.voicePitchSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 22, 166 / 2 - 2, 20, Configuration.VOICE_PITCH, plr.getVoicePitch(), value -> {
-        }, value -> Text.translatable("wildfire_gender.slider.voice_pitch", Math.round(value * 100)), value -> {
-            if (plr.updateVoicePitch(value)) {
-                PlayerConfig.saveGenderInfo(plr);
-                if(client.player != null) {
-                    SoundEvent hurtSound = plr.getGender().getHurtSound();
-                    if(hurtSound != null) {
-                        float pitch = (client.player.getRandom().nextFloat() - client.player.getRandom().nextFloat()) * 0.2F /*+ 1.0F*/; // +1 is from getVoicePitch()
-                        client.player.playSound(hurtSound, 1f, pitch + plr.getVoicePitch());
+        this.addDrawableChild(this.voicePitchSlider = new WildfireSlider(this.width / 2 - 36, tabOffsetY + 22, 166 / 2 - 2, 20, cfg.voicePitch,
+                value -> Text.translatable("wildfire_gender.slider.voice_pitch", Math.round(value * 100)),
+                value -> {
+                    plr.save();
+                    if(client.player != null) {
+                        SoundEvent hurtSound = plr.getGender().getHurtSound();
+                        if(hurtSound != null) {
+                            float pitch = (client.player.getRandom().nextFloat() - client.player.getRandom().nextFloat()) * 0.2F /*+ 1.0F*/; // +1 is from getVoicePitch()
+                            client.player.playSound(hurtSound, 1f, pitch + plr.getVoicePitch());
+                        }
                     }
-                }
-            }
-        }));
+                }));
         voicePitchSlider.active = plr.hasHurtSounds();
         this.voicePitchSlider.setArrowKeyStep(0.01);
 
         this.addDrawableChild(btnHideInArmor = new WildfireButton(this.width / 2 - 36, tabOffsetY + 46, 166, 20,
                 Text.translatable("wildfire_gender.char_settings.hide_in_armor", plr.showBreastsInArmor() ? DISABLED : ENABLED), button -> {
             boolean enableShowInArmor = !plr.showBreastsInArmor();
-            if (plr.updateShowBreastsInArmor(enableShowInArmor)) {
-                button.setMessage(Text.translatable("wildfire_gender.char_settings.hide_in_armor", enableShowInArmor ? DISABLED : ENABLED));
-                PlayerConfig.saveGenderInfo(plr);
-            }
+            plr.updateShowBreastsInArmor(enableShowInArmor);
+            button.setMessage(Text.translatable("wildfire_gender.char_settings.hide_in_armor", enableShowInArmor ? DISABLED : ENABLED));
+            plr.save();
         }));
 
         //Preset Tab Below
-        PRESET_LIST = new WildfireBreastPresetList(this, 156, (j - 48));
+        PRESET_LIST = new WildfireBreastPresetList(this, 156, (y - 48));
         PRESET_LIST.setX(this.width / 2 + 30);
         PRESET_LIST.setHeight(125);
 
@@ -284,11 +265,11 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         PlayerConfig plr = Objects.requireNonNull(getPlayer(), "getPlayer()");
         cfg.set(BreastPresetConfiguration.PRESET_NAME, presetName);
         cfg.set(BreastPresetConfiguration.BUST_SIZE, plr.getBustSize());
-        cfg.set(BreastPresetConfiguration.BREASTS_UNIBOOB, plr.getBreasts().isUniboob());
-        cfg.set(BreastPresetConfiguration.BREASTS_CLEAVAGE, plr.getBreasts().getCleavage());
-        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_X, plr.getBreasts().getXOffset());
-        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_Y, plr.getBreasts().getYOffset());
-        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_Z, plr.getBreasts().getZOffset());
+        cfg.set(BreastPresetConfiguration.BREASTS_UNIBOOB, plr.getBreasts().uniboob());
+        cfg.set(BreastPresetConfiguration.BREASTS_CLEAVAGE, plr.getBreasts().cleavage());
+        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_X, plr.getBreasts().offset().x());
+        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_Y, plr.getBreasts().offset().y());
+        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_Z, plr.getBreasts().offset().z());
         cfg.save();
 
         PRESET_LIST.refreshList();

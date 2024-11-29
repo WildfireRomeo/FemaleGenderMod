@@ -19,7 +19,7 @@
 package com.wildfire.gui.screen;
 
 import com.wildfire.main.WildfireLocalization;
-import com.wildfire.main.config.core.ConfigValue;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.entitydata.PlayerConfig;
 import com.wildfire.main.WildfireGender;
 import java.util.UUID;
@@ -51,7 +51,7 @@ public abstract class BaseWildfireScreen extends Screen {
         return false;
     }
 
-    protected Text enabled(ConfigValue<Boolean> config) {
+    protected Text enabled(ConfigKey<Boolean> config) {
         return enabled(config.get());
     }
 

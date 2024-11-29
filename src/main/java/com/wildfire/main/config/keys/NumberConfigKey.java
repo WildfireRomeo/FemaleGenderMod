@@ -57,7 +57,7 @@ public abstract class NumberConfigKey<TYPE extends Number & Comparable<TYPE>> ex
     }
 
     @Override
-    public void save(JsonObject object, TYPE value) {
+    public void save(JsonObject object) {
         object.addProperty(key, value);
     }
 

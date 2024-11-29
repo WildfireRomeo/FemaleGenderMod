@@ -90,11 +90,10 @@ public class WardrobeBrowserScreen extends BaseWildfireScreen {
 				case FEMALE -> Gender.OTHER;
 				case OTHER -> Gender.MALE;
 			};
-			if (plr.updateGender(gender)) {
-				button.setMessage(getGenderLabel(gender));
-				PlayerConfig.saveGenderInfo(plr);
-				clearAndInit();
-			}
+			plr.updateGender(gender);
+			plr.save();
+			button.setMessage(getGenderLabel(gender));
+			clearAndInit();
 		}));
 
 		WildfireButton btnCharacterPersonalization;

@@ -166,13 +166,13 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 		}
 
 		breasts = entityConfig.getBreasts();
-		breastOffsetX = Math.round((Math.round(breasts.getXOffset() * 100f) / 100f) * 10) / 10f;
-		breastOffsetY = -Math.round((Math.round(breasts.getYOffset() * 100f) / 100f) * 10) / 10f;
-		breastOffsetZ = -Math.round((Math.round(breasts.getZOffset() * 100f) / 100f) * 10) / 10f;
+		breastOffsetX = Math.round((Math.round(breasts.offset().x() * 100f) / 100f) * 10) / 10f;
+		breastOffsetY = -Math.round((Math.round(breasts.offset().y() * 100f) / 100f) * 10) / 10f;
+		breastOffsetZ = -Math.round((Math.round(breasts.offset().z() * 100f) / 100f) * 10) / 10f;
 
 		BreastPhysics leftBreastPhysics = entityConfig.getLeftBreastPhysics();
 		final float bSize = leftBreastPhysics.getBreastSize(partialTicks);
-		outwardAngle = (Math.round(breasts.getCleavage() * 100f) / 100f) * 100f;
+		outwardAngle = (Math.round(breasts.cleavage() * 100f) / 100f) * 100f;
 		outwardAngle = Math.min(outwardAngle, 10);
 
 		resizeBox(bSize);
@@ -180,7 +180,7 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 		lPhysPositionY = MathHelper.lerp(partialTicks, leftBreastPhysics.getPrePositionY(), leftBreastPhysics.getPositionY());
 		lPhysPositionX = MathHelper.lerp(partialTicks, leftBreastPhysics.getPrePositionX(), leftBreastPhysics.getPositionX());
 		lPhysBounceRotation = MathHelper.lerp(partialTicks, leftBreastPhysics.getPreBounceRotation(), leftBreastPhysics.getBounceRotation());
-		if(breasts.isUniboob()) {
+		if(breasts.uniboob()) {
 			rPhysPositionY = lPhysPositionY;
 			rPhysPositionX = lPhysPositionX;
 			rPhysBounceRotation = lPhysBounceRotation;
@@ -250,13 +250,13 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 
 		matrixStack.translate((side.isLeft ? breastOffsetX : -breastOffsetX) * 0.0625f, 0.05625f + (breastOffsetY * 0.0625f), zOffset - 0.0625f * 2f + (breastOffsetZ * 0.0625f)); //shift down to correct position
 
-		if(!breasts.isUniboob()) {
+		if(!breasts.uniboob()) {
 			matrixStack.translate(-0.0625f * 2 * (side.isLeft ? 1 : -1), 0, 0);
 		}
 		if(bounceEnabled) {
 			matrixStack.multiply(new Quaternionf().rotationXYZ(0, (float)((side.isLeft ? lPhysBounceRotation : rPhysBounceRotation) * (Math.PI / 180f)), 0));
 		}
-		if(!breasts.isUniboob()) {
+		if(!breasts.uniboob()) {
 			matrixStack.translate(0.0625f * 2 * (side.isLeft ? 1 : -1), 0, 0);
 		}
 

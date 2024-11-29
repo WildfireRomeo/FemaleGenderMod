@@ -23,7 +23,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
 public class StringConfigKey extends ConfigKey<String> {
-
     public StringConfigKey(String key, String defaultValue) {
         super(key, defaultValue);
     }
@@ -40,7 +39,7 @@ public class StringConfigKey extends ConfigKey<String> {
     }
 
     @Override
-    public void save(JsonObject object, String value) {
+    public void save(JsonObject object) {
         object.addProperty(key, value);
     }
 }

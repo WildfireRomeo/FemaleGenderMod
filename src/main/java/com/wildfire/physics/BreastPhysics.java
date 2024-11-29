@@ -191,7 +191,7 @@ public class BreastPhysics {
 		//Adjust bounce intensity by physics resistance of the worn armor
 		bounceIntensity *= 1 - resistance;
 
-		if(!entityConfig.getBreasts().isUniboob()) {
+		if(!entityConfig.getBreasts().uniboob()) {
 			bounceIntensity = bounceIntensity * WildfireHelper.randFloat(0.5f, 1.5f);
 		}
 

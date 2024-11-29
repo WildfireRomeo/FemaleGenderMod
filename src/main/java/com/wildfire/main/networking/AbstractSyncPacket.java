@@ -72,7 +72,7 @@ abstract class AbstractSyncPacket {
         plr.updateHurtSounds(hurtSounds);
         plr.updateVoicePitch(voicePitch);
         physics.applyTo(plr);
-        plr.getBreasts().copyFrom(breasts);
+        Breasts.applyTo(plr.getConfig(), breasts);
     }
 
     protected record BreastPhysics(boolean physics, boolean showInArmor, float bounceMultiplier, float floppyMultiplier) {

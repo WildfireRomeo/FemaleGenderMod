@@ -20,15 +20,21 @@ package com.wildfire.main.config.keys;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.wildfire.main.WildfireGender;
+import org.jetbrains.annotations.ApiStatus;
 
 public abstract class ConfigKey<TYPE> {
 
+    private boolean isImmutable = false;
+
     protected final String key;
     protected final TYPE defaultValue;
+    protected TYPE value;
 
     protected ConfigKey(String key, TYPE defaultValue) {
         this.key = key;
         this.defaultValue = defaultValue;
+        this.value = defaultValue;
     }
 
     public String getKey() {
@@ -39,23 +45,35 @@ public abstract class ConfigKey<TYPE> {
         return defaultValue;
     }
 
-    public final TYPE read(JsonObject obj) {
+    public TYPE get() {
+        return value;
+    }
+
+    public void set(TYPE value) {
+        if(isImmutable) return;
+        if(validate(value)) this.value = value;
+    }
+
+    @ApiStatus.Internal
+    public final void apply(JsonObject obj) {
         JsonElement element = obj.get(key);
-        if (element != null) {
-            TYPE value = read(element);
-            if (validate(value)) {
-                //If the value is valid, return it otherwise return the default
-                return value;
-            }
+        if(element != null) {
+            set(read(element));
         }
-        return defaultValue;
     }
 
     protected abstract TYPE read(JsonElement element);
 
-    public abstract void save(JsonObject object, TYPE value);
+    @ApiStatus.Internal
+    public abstract void save(JsonObject object);
 
     public boolean validate(TYPE value) {
         return value != null;
+    }
+
+    @ApiStatus.Internal
+    public final void makeImmutable() {
+        WildfireGender.LOGGER.info("Marking {} as immutable", key);
+        this.isImmutable = true;
     }
 }

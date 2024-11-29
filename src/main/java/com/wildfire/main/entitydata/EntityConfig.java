@@ -62,13 +62,7 @@ public class EntityConfig {
 			});
 
 	public final UUID uuid;
-	protected Gender gender = Configuration.GENDER.getDefault();
-	protected float pBustSize = Configuration.BUST_SIZE.getDefault();
-	protected boolean breastPhysics = Configuration.BREAST_PHYSICS.getDefault();
-	protected float bounceMultiplier = Configuration.BOUNCE_MULTIPLIER.getDefault();
-	protected float floppyMultiplier = Configuration.FLOPPY_MULTIPLIER.getDefault();
-
-	protected float voicePitch = Configuration.VOICE_PITCH.getDefault();
+	protected final Configuration cfg;
 
 	// note: hurt sounds, armor physics override, and show in armor are not defined here, as they have no relevance
 	// to entities, and are instead entirely in PlayerConfig
@@ -78,15 +72,18 @@ public class EntityConfig {
 	//      difficult to do so without some major changes to split this up further into a common class
 	//      with a client extension class (e.g. the PlayerEntity & AbstractClientPlayerEntity classes)
 	protected final BreastPhysics lBreastPhysics, rBreastPhysics;
-	protected final Breasts breasts;
 	protected boolean jacketLayer = true;
 	protected @Nullable BreastDataComponent fromComponent;
 
-	protected EntityConfig(UUID uuid) {
+	protected EntityConfig(UUID uuid, Configuration config) {
 		this.uuid = uuid;
-		this.breasts = new Breasts();
+		this.cfg = config;
 		lBreastPhysics = new BreastPhysics(this);
 		rBreastPhysics = new BreastPhysics(this);
+	}
+
+	protected EntityConfig(UUID uuid) {
+		this(uuid, new Configuration(uuid.toString(), false));
 	}
 
 	/**
@@ -98,7 +95,7 @@ public class EntityConfig {
 		NbtComponent component = chestplate.get(DataComponentTypes.CUSTOM_DATA);
 		if(chestplate.isEmpty() || component == null) {
 			this.fromComponent = null;
-			this.gender = Gender.MALE;
+			cfg.gender.set(Gender.MALE);
 			return;
 		} else if(fromComponent != null && Objects.equals(component, fromComponent.nbtComponent())) {
 			// nothing's changed since the last time we checked, so there's no need to read from the
@@ -108,15 +105,16 @@ public class EntityConfig {
 
 		fromComponent = BreastDataComponent.fromComponent(component);
 		if(fromComponent == null) {
-			this.gender = Gender.MALE;
+			cfg.gender.set(Gender.MALE);
 			return;
 		}
 
-		breastPhysics = false;
-		pBustSize = fromComponent.breastSize();
-		gender = pBustSize >= 0.02f ? Gender.FEMALE : Gender.MALE;
-		breasts.updateCleavage(fromComponent.cleavage());
-		breasts.updateOffsets(fromComponent.offsets());
+		float size;
+		cfg.physics.set(false);
+		cfg.bustSize.set(size = fromComponent.breastSize());
+		cfg.gender.set(size >= 0.02f ? Gender.FEMALE : Gender.MALE);
+		cfg.breastsCleavage.set(fromComponent.cleavage());
+		Breasts.updateOffsets(cfg, fromComponent.offsets());
 		this.jacketLayer = fromComponent.jacket();
 	}
 
@@ -137,19 +135,19 @@ public class EntityConfig {
 	}
 
 	public @NotNull Gender getGender() {
-		return gender;
+		return cfg.gender.get();
 	}
 
 	public @NotNull Breasts getBreasts() {
-		return breasts;
+		return new Breasts(cfg);
 	}
 
 	public float getBustSize() {
-		return pBustSize;
+		return cfg.bustSize.get();
 	}
 
 	public boolean hasBreastPhysics() {
-		return breastPhysics;
+		return cfg.physics.get();
 	}
 
 	public boolean getArmorPhysicsOverride() {
@@ -161,15 +159,15 @@ public class EntityConfig {
 	}
 
 	public float getBounceMultiplier() {
-		return bounceMultiplier;
+		return cfg.bounceMultiplier.get();
 	}
 
 	public float getFloppiness() {
-		return this.floppyMultiplier;
+		return cfg.floppyMultiplier.get();
 	}
 
 	public float getVoicePitch() {
-		return this.voicePitch;
+		return cfg.voicePitch.get();
 	}
 
 	public @NotNull BreastPhysics getLeftBreastPhysics() {
@@ -197,6 +195,6 @@ public class EntityConfig {
 
 	@Override
 	public String toString() {
-		return "%s(uuid=%s, gender=%s)".formatted(getClass().getCanonicalName(), uuid, gender);
+		return "%s(uuid=%s, gender=%s)".formatted(getClass().getCanonicalName(), uuid, cfg.gender.get());
 	}
 }

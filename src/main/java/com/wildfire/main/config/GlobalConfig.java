@@ -19,10 +19,10 @@
 package com.wildfire.main.config;
 
 import com.wildfire.main.config.core.AbstractConfiguration;
-import com.wildfire.main.config.core.ConfigValue;
 import com.wildfire.main.config.enums.ShowPlayerListMode;
 import com.wildfire.main.config.enums.SyncVerbosity;
 import com.wildfire.main.config.keys.BooleanConfigKey;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.keys.EnumConfigKey;
 import com.wildfire.main.config.keys.StringConfigKey;
 
@@ -33,18 +33,17 @@ public class GlobalConfig extends AbstractConfiguration {
         super("wildfire_gender");
     }
 
-    public final ConfigValue<Boolean> firstTimeLoad = register(new BooleanConfigKey("firstTimeLoad", true));
+    public final ConfigKey<Boolean> firstTimeLoad = register(new BooleanConfigKey("firstTimeLoad", true));
 
-    public final ConfigValue<Boolean> cloudSyncEnabled = register(new BooleanConfigKey("cloud_sync", false));
-    public final ConfigValue<Boolean> automaticCloudSync = register(new BooleanConfigKey("sync_player_data", false));
+    public final com.wildfire.main.config.keys.ConfigKey<Boolean> cloudSyncEnabled = register(new BooleanConfigKey("cloud_sync", false));
+    public final ConfigKey<Boolean> automaticCloudSync = register(new BooleanConfigKey("sync_player_data", false));
     // see CloudSync#DEFAULT_CLOUD_URL for the actual default
-    public final ConfigValue<String> cloudServer = register(new StringConfigKey("cloud_server", ""));
-    public final ConfigValue<SyncVerbosity> syncLogVerbosity = register(new EnumConfigKey<>("sync_log_verbosity", SyncVerbosity.DEFAULT, SyncVerbosity.BY_ID));
+    public final ConfigKey<String> cloudServer = register(new StringConfigKey("cloud_server", ""));
+    public final ConfigKey<SyncVerbosity> syncLogVerbosity = register(new EnumConfigKey<>("sync_log_verbosity", SyncVerbosity.DEFAULT, SyncVerbosity.BY_ID));
 
-    public final ConfigValue<ShowPlayerListMode> alwaysShowList = register(new EnumConfigKey<>("alwaysShowList", ShowPlayerListMode.MOD_UI_ONLY, ShowPlayerListMode.BY_ID));
+    public final ConfigKey<ShowPlayerListMode> alwaysShowList = register(new EnumConfigKey<>("alwaysShowList", ShowPlayerListMode.MOD_UI_ONLY, ShowPlayerListMode.BY_ID));
 
     static {
-        INSTANCE.setDefaults();
         if(!INSTANCE.exists()) {
             INSTANCE.save();
         }

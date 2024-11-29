@@ -23,7 +23,6 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.util.math.MathHelper;
 
 public class FloatConfigKey extends NumberConfigKey<Float> {
-
     public FloatConfigKey(String key, Float defaultValue) {
         super(key, defaultValue);
     }

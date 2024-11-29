@@ -20,7 +20,6 @@ package com.wildfire.main.config.core;
 
 import com.google.common.collect.ForwardingMap;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonWriter;
@@ -31,7 +30,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -42,16 +40,15 @@ import java.util.*;
 /**
  * Generic configuration implementation, storing key-value pairs from a JSON file.
  */
-public abstract class AbstractConfiguration extends ForwardingMap<String, ConfigValue<?>> {
+public abstract class AbstractConfiguration extends ForwardingMap<String, ConfigKey<?>> {
 
 	private static final TypeAdapter<JsonObject> ADAPTER = new Gson().getAdapter(JsonObject.class);
 
-	private final File file;
-	private final JsonObject json = new JsonObject();
-	private final Map<String, ConfigValue<?>> values = new HashMap<>();
+	private final Path file;
+	private final Map<String, ConfigKey<?>> values = new HashMap<>();
 
 	protected AbstractConfiguration(String fileName) {
-		this.file = FabricLoader.getInstance().getConfigDir().resolve(fileName + ".json").toFile();
+		this.file = FabricLoader.getInstance().getConfigDir().resolve(fileName + ".json");
 	}
 
 	protected AbstractConfiguration(String directory, String cfgName) {
@@ -63,57 +60,45 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 				WildfireGender.LOGGER.error("Failed to create config directory", e);
 			}
 		}
-		this.file = saveDir.resolve(cfgName + ".json").toFile();
+		this.file = saveDir.resolve(cfgName + ".json");
 	}
 
-	public static boolean supportsSaving() {
+	public boolean supportsSaving() {
 		return FabricLoader.getInstance().getEnvironmentType() != EnvType.SERVER;
 	}
 
-	protected <TYPE> ConfigValue<TYPE> register(ConfigKey<TYPE> key) {
-		var value = new ConfigValue<>(this, key);
-		this.values.put(key.getKey(), value);
-		return value;
+	protected <TYPE, KEY extends ConfigKey<TYPE>> KEY register(KEY key) {
+		if(containsKey(key.getKey())) {
+			throw new IllegalArgumentException("Configuration key " + key.getKey() + " is already registered");
+		}
+		this.values.put(key.getKey(), key);
+		return key;
 	}
 
 	@Deprecated
 	public <TYPE> void set(ConfigKey<TYPE> key, TYPE value) {
-		key.save(json, value);
+		if(!containsKey(key.getKey())) {
+			register(key);
+		}
+		key.set(value);
 	}
 
 	@Deprecated
 	public <TYPE> TYPE get(ConfigKey<TYPE> key) {
-		return key.read(json);
-	}
-
-	@Deprecated
-	public <TYPE> void setDefault(ConfigKey<TYPE> key) {
-		if(!json.has(key.getKey())) {
-			set(key, key.getDefault());
+		if(!containsKey(key.getKey())) {
+			register(key);
 		}
-	}
-
-	@Deprecated
-	public void removeParameter(ConfigKey<?> key) {
-		removeParameter(key.getKey());
-	}
-
-	@Deprecated
-	public void removeParameter(String key) {
-		json.remove(key);
-	}
-
-	protected void setDefaults() {
-		values.values().forEach(ConfigValue::setDefault);
+		return key.get();
 	}
 
 	public boolean exists() {
-		return file.exists();
+		return file.toFile().exists();
 	}
 
 	public void save() {
 		if(!supportsSaving()) return;
-		try(FileWriter writer = new FileWriter(file); JsonWriter jsonWriter = new JsonWriter(writer)) {
+		var json = toJson();
+		try(FileWriter writer = new FileWriter(file.toFile()); JsonWriter jsonWriter = new JsonWriter(writer)) {
 			jsonWriter.setIndent("\t");
 			ADAPTER.write(jsonWriter, json);
 		} catch (IOException e) {
@@ -121,24 +106,41 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 		}
 	}
 
+	/**
+	 * Load the current config from its file on disk
+	 */
 	public void load() {
-		if(!supportsSaving() || !file.exists()) return;
-		try(FileReader configurationFile = new FileReader(file)) {
+		if(!supportsSaving() || !exists()) return;
+		try(FileReader configurationFile = new FileReader(file.toFile())) {
 			JsonObject obj = new Gson().fromJson(configurationFile, JsonObject.class);
-			for(Map.Entry<String, JsonElement> entry : obj.entrySet()) {
-				json.add(entry.getKey(), entry.getValue());
-			}
+			apply(obj);
 		} catch(IOException e) {
 			WildfireGender.LOGGER.error("Failed to load config file", e);
 		}
 	}
 
+	/**
+	 * Apply values from the provided {@link JsonObject} to the current config
+	 *
+	 * @param json The {@link JsonObject} to apply loaded values from
+	 */
+	public void apply(JsonObject json) {
+		values().forEach(key -> key.apply(json));
+	}
+
 	@Override
-	protected final @NotNull @Unmodifiable Map<String, ConfigValue<?>> delegate() {
+	protected final @NotNull @Unmodifiable Map<String, ConfigKey<?>> delegate() {
 		return Collections.unmodifiableMap(values);
 	}
 
+	@Deprecated
 	public final JsonObject json() {
+		return toJson();
+	}
+
+	public final JsonObject toJson() {
+		var json = new JsonObject();
+		this.values.values().forEach(v -> v.save(json));
 		return json;
 	}
 }
