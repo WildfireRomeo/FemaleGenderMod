@@ -261,15 +261,16 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
 
 
     private void createNewPreset(String presetName) {
-        BreastPresetConfiguration cfg = new BreastPresetConfiguration(presetName);
-        PlayerConfig plr = Objects.requireNonNull(getPlayer(), "getPlayer()");
-        cfg.set(BreastPresetConfiguration.PRESET_NAME, presetName);
-        cfg.set(BreastPresetConfiguration.BUST_SIZE, plr.getBustSize());
-        cfg.set(BreastPresetConfiguration.BREASTS_UNIBOOB, plr.getBreasts().uniboob());
-        cfg.set(BreastPresetConfiguration.BREASTS_CLEAVAGE, plr.getBreasts().cleavage());
-        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_X, plr.getBreasts().offset().x());
-        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_Y, plr.getBreasts().offset().y());
-        cfg.set(BreastPresetConfiguration.BREASTS_OFFSET_Z, plr.getBreasts().offset().z());
+        var cfg = new BreastPresetConfiguration(presetName);
+        var plr = Objects.requireNonNull(getPlayer(), "getPlayer()");
+        var breasts = plr.getBreasts();
+        cfg.name.set(presetName);
+        cfg.bustSize.set(plr.getBustSize());
+        cfg.uniboob.set(breasts.uniboob());
+        cfg.cleavage.set(breasts.cleavage());
+        cfg.breastsXOffset.set(breasts.offset().x());
+        cfg.breastsYOffset.set(breasts.offset().y());
+        cfg.breastsZOffset.set(breasts.offset().z());
         cfg.save();
 
         PRESET_LIST.refreshList();

@@ -103,9 +103,9 @@ public class WildfireBreastPresetList extends EntryListWidget<WildfireBreastPres
         BreastPresetConfiguration[] CONFIGS = BreastPresetConfiguration.getBreastPresetConfigurationFiles();
         ArrayList<BreastPresetListEntry> tmpPresets = new ArrayList<>();
         for(BreastPresetConfiguration presetCfg : CONFIGS) {
-            tmpPresets.add(new BreastPresetListEntry(presetCfg.get(BreastPresetConfiguration.PRESET_NAME), presetCfg));
+            tmpPresets.add(new BreastPresetListEntry(presetCfg.name.get(), presetCfg));
         }
-        BREAST_PRESETS = tmpPresets.toArray(new BreastPresetListEntry[tmpPresets.size()]);
+        BREAST_PRESETS = tmpPresets.toArray(BreastPresetListEntry[]::new);
 
         if(this.client.world == null || this.client.player == null) return;
 

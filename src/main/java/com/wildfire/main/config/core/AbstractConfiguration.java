@@ -75,22 +75,6 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 		return key;
 	}
 
-	@Deprecated
-	public <TYPE> void set(ConfigKey<TYPE> key, TYPE value) {
-		if(!containsKey(key.getKey())) {
-			register(key);
-		}
-		key.set(value);
-	}
-
-	@Deprecated
-	public <TYPE> TYPE get(ConfigKey<TYPE> key) {
-		if(!containsKey(key.getKey())) {
-			register(key);
-		}
-		return key.get();
-	}
-
 	public boolean exists() {
 		return file.toFile().exists();
 	}

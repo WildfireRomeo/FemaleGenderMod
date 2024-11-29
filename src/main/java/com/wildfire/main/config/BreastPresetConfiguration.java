@@ -20,6 +20,7 @@ package com.wildfire.main.config;
 
 import com.wildfire.main.config.core.AbstractConfiguration;
 import com.wildfire.main.config.keys.BooleanConfigKey;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.keys.FloatConfigKey;
 import com.wildfire.main.config.keys.StringConfigKey;
 import net.fabricmc.loader.api.FabricLoader;
@@ -31,14 +32,14 @@ public class BreastPresetConfiguration extends AbstractConfiguration {
 
 	private static final String PRESETS_DIR = "WildfireGender/presets";
 
-	public static final StringConfigKey PRESET_NAME = new StringConfigKey("preset_name", "");
-	public static final FloatConfigKey BUST_SIZE = new FloatConfigKey("bust_size", 0.6F, 0, 0.8f);
+	public final ConfigKey<String> name = register(new StringConfigKey("preset_name", ""));
+	public final FloatConfigKey bustSize = register(new FloatConfigKey("bust_size", 0.6F, 0, 0.8f));
 
-	public static final FloatConfigKey BREASTS_OFFSET_X = new FloatConfigKey("breasts_xOffset", 0.0F, -1, 1);
-	public static final FloatConfigKey BREASTS_OFFSET_Y = new FloatConfigKey("breasts_yOffset", 0.0F, -1, 1);
-	public static final FloatConfigKey BREASTS_OFFSET_Z = new FloatConfigKey("breasts_zOffset", 0.0F, -1, 0);
-	public static final BooleanConfigKey BREASTS_UNIBOOB = new BooleanConfigKey("breasts_uniboob", true);
-	public static final FloatConfigKey BREASTS_CLEAVAGE = new FloatConfigKey("breasts_cleavage", 0, 0, 0.1F);
+	public final ConfigKey<Float> breastsXOffset = register(new FloatConfigKey("breasts_xOffset", 0.0F, -1, 1));
+	public final ConfigKey<Float> breastsYOffset = register(new FloatConfigKey("breasts_yOffset", 0.0F, -1, 1));
+	public final ConfigKey<Float> breastsZOffset = register(new FloatConfigKey("breasts_zOffset", 0.0F, -1, 0));
+	public final ConfigKey<Boolean> uniboob = register(new BooleanConfigKey("breasts_uniboob", true));
+	public final ConfigKey<Float> cleavage = register(new FloatConfigKey("breasts_cleavage", 0, 0, 0.1F));
 
 	public BreastPresetConfiguration(String cfgName) {
 		super(PRESETS_DIR, cfgName);
