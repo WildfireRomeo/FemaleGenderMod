@@ -72,9 +72,9 @@ public class WildfireFirstTimeSetupScreen extends BaseWildfireScreen {
 				button -> {
 					var config = GlobalConfig.INSTANCE;
 					//Enable both settings, they can always disable automatic later? TBD
-					config.set(GlobalConfig.CLOUD_SYNC_ENABLED, true);
-					config.set(GlobalConfig.AUTOMATIC_CLOUD_SYNC, true);
-					config.set(GlobalConfig.FIRST_TIME_LOAD, false);
+					config.cloudSyncEnabled.set(true);
+					config.automaticCloudSync.set(true);
+					config.firstTimeLoad.set(false);
 
 					button.active = false;
 					button.setMessage(Text.literal("..."));
@@ -89,9 +89,9 @@ public class WildfireFirstTimeSetupScreen extends BaseWildfireScreen {
 				DISABLE_CLOUD_SYNCING,
 				button -> {
 					var config = GlobalConfig.INSTANCE;
-					config.set(GlobalConfig.CLOUD_SYNC_ENABLED, false);
-					config.set(GlobalConfig.AUTOMATIC_CLOUD_SYNC, false);
-					config.set(GlobalConfig.FIRST_TIME_LOAD, false);
+					config.cloudSyncEnabled.set(false);
+					config.automaticCloudSync.set(false);
+					config.firstTimeLoad.set(false);
 
 					client.setScreen(new WardrobeBrowserScreen(null, client.player.getUuid()));
 				}));
@@ -154,11 +154,6 @@ public class WildfireFirstTimeSetupScreen extends BaseWildfireScreen {
 		mStack.pop();
 
 
-	}
-
-	@Override
-	public void close() {
-		super.close();
 	}
 
 	@Override

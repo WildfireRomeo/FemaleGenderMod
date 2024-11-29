@@ -20,9 +20,9 @@ package com.wildfire.main.entitydata;
 
 import com.google.gson.JsonObject;
 import com.wildfire.main.WildfireGender;
-import com.wildfire.main.config.ConfigKey;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.Configuration;
-import com.wildfire.main.Gender;
+import com.wildfire.main.config.enums.Gender;
 import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -151,7 +151,7 @@ public class PlayerConfig extends EntityConfig {
 	}
 
 	public JsonObject toJson() {
-		return cfg.SAVE_VALUES.deepCopy();
+		return cfg.json().deepCopy();
 	}
 
 	public boolean hasLocalConfig() {
@@ -232,7 +232,7 @@ public class PlayerConfig extends EntityConfig {
 	}
 
 	public void updateFromJson(JsonObject json) {
-		json.asMap().forEach(this.cfg.SAVE_VALUES::add);
+		json.asMap().forEach(this.cfg.json()::add);
 		loadFromConfig(false);
 		this.syncStatus = SyncStatus.SYNCED;
 	}

@@ -120,14 +120,14 @@ public final class CloudSync {
 	 * @return {@code true} if syncing is enabled; this will always return {@code false} if {@link #isAvailable() syncing is unavailable}.
 	 */
 	public static boolean isEnabled() {
-		return isAvailable() && GlobalConfig.INSTANCE.get(GlobalConfig.CLOUD_SYNC_ENABLED);
+		return isAvailable() && GlobalConfig.INSTANCE.cloudSyncEnabled.get();
 	}
 
 	/**
 	 * @return The URL of the sync server currently being used
 	 */
 	public static String getCloudServer() {
-		var url = GlobalConfig.INSTANCE.get(GlobalConfig.CLOUD_SERVER);
+		var url = GlobalConfig.INSTANCE.cloudServer.get();
 		return url.isBlank() ? DEFAULT_CLOUD_URL : url;
 	}
 

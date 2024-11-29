@@ -35,7 +35,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -62,7 +61,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -135,7 +133,7 @@ public final class WildfireEventHandler {
 			return;
 		}
 
-		boolean shouldShow = switch(GlobalConfig.INSTANCE.get(GlobalConfig.ALWAYS_SHOW_LIST)) {
+		boolean shouldShow = switch(GlobalConfig.INSTANCE.alwaysShowList.get()) {
 			case MOD_UI_ONLY -> false;
 			case TAB_LIST_OPEN -> MinecraftClient.getInstance().options.playerListKey.isPressed();
 			case ALWAYS -> true;
@@ -191,7 +189,7 @@ public final class WildfireEventHandler {
 		if(timer % 40 == 0) {
 			CloudSync.sendNextQueueBatch();
 			if(clientConfig != null && clientConfig.needsCloudSync && !(client.currentScreen instanceof BaseWildfireScreen)) {
-				if(GlobalConfig.INSTANCE.get(GlobalConfig.AUTOMATIC_CLOUD_SYNC) && !CloudSync.syncOnCooldown()) {
+				if(GlobalConfig.INSTANCE.automaticCloudSync.get() && !CloudSync.syncOnCooldown()) {
 					CompletableFuture.runAsync(() -> {
 						try {
 							CloudSync.sync(clientConfig).join();
@@ -208,7 +206,7 @@ public final class WildfireEventHandler {
 		}
 
 		if(CONFIG_KEYBIND.wasPressed() && client.currentScreen == null) {
-			if(GlobalConfig.INSTANCE.get(GlobalConfig.FIRST_TIME_LOAD) && CloudSync.isAvailable()) {
+			if(GlobalConfig.INSTANCE.firstTimeLoad.get() && CloudSync.isAvailable()) {
 				client.setScreen(new WildfireFirstTimeSetupScreen(null, client.player.getUuid()));
 			} else {
 				client.setScreen(new WardrobeBrowserScreen(null, client.player.getUuid()));

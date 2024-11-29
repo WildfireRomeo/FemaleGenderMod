@@ -113,9 +113,4 @@ public class WildfireCloudDetailsScreen extends BaseWildfireScreen {
 			GuiUtils.drawCenteredTextWrapped(ctx, textRenderer, Text.translatable("wildfire_gender.cloud_details.page1"), x, y - 75, 256 - 10, 0x00FF00);
 		}
 	}
-
-	@Override
-	public void close() {
-		super.close();
-	}
 }

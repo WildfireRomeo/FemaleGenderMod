@@ -19,7 +19,7 @@
 package com.wildfire.gui.screen;
 
 import com.wildfire.gui.GuiUtils;
-import com.wildfire.main.Gender;
+import com.wildfire.main.config.enums.Gender;
 import com.wildfire.main.WildfireGender;
 
 import java.util.*;
@@ -73,16 +73,16 @@ public class WardrobeBrowserScreen extends BaseWildfireScreen {
 
 		WildfireButton listButton;
 		this.addDrawableChild(listButton = new WildfireButton(126, 4, 185, 10,
-			Text.translatable("wildfire_gender.always_show_list", GlobalConfig.INSTANCE.get(GlobalConfig.ALWAYS_SHOW_LIST).text()),
+			Text.translatable("wildfire_gender.always_show_list", GlobalConfig.INSTANCE.alwaysShowList.get().text()),
 			button -> {
 				var config = GlobalConfig.INSTANCE;
-				var newVal = config.get(GlobalConfig.ALWAYS_SHOW_LIST).next();
-				config.set(GlobalConfig.ALWAYS_SHOW_LIST, newVal);
+				var newVal = config.alwaysShowList.get().next();
+				config.alwaysShowList.set(newVal);
 				config.save();
 				button.setMessage(Text.translatable("wildfire_gender.always_show_list", newVal.text()));
 				button.setTooltip(newVal.tooltip());
 			}));
-		listButton.setTooltip(GlobalConfig.INSTANCE.get(GlobalConfig.ALWAYS_SHOW_LIST).tooltip());
+		listButton.setTooltip(GlobalConfig.INSTANCE.alwaysShowList.get().tooltip());
 
 		this.addDrawableChild(new WildfireButton(this.width / 2 - 130, this.height / 2 + 33, 80, 15, plr.getGender().getDisplayName(), button -> {
 			Gender gender = switch (plr.getGender()) {

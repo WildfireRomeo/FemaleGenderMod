@@ -32,7 +32,7 @@ public final class SyncLog {
 	public static final List<Entry> SYNC_LOG = new ArrayList<>();
 
 	public static int verbosity() {
-		return GlobalConfig.INSTANCE.get(GlobalConfig.SYNC_VERBOSITY).ordinal();
+		return GlobalConfig.INSTANCE.syncLogVerbosity.get().ordinal();
 	}
 
 	public static void add(Text text, SyncVerbosity verbosity) {

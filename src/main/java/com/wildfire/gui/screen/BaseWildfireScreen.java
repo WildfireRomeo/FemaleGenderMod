@@ -18,6 +18,8 @@
 
 package com.wildfire.gui.screen;
 
+import com.wildfire.main.WildfireLocalization;
+import com.wildfire.main.config.core.ConfigValue;
 import com.wildfire.main.entitydata.PlayerConfig;
 import com.wildfire.main.WildfireGender;
 import java.util.UUID;
@@ -47,6 +49,14 @@ public abstract class BaseWildfireScreen extends Screen {
     @Override
     public boolean shouldPause() {
         return false;
+    }
+
+    protected Text enabled(ConfigValue<Boolean> config) {
+        return enabled(config.get());
+    }
+
+    protected Text enabled(boolean condition) {
+        return condition ? WildfireLocalization.ENABLED : WildfireLocalization.DISABLED;
     }
 
     @Override

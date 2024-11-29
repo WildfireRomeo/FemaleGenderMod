@@ -18,6 +18,10 @@
 
 package com.wildfire.main.config;
 
+import com.wildfire.main.config.core.AbstractConfiguration;
+import com.wildfire.main.config.keys.BooleanConfigKey;
+import com.wildfire.main.config.keys.FloatConfigKey;
+import com.wildfire.main.config.keys.StringConfigKey;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;

@@ -18,7 +18,7 @@
 
 package com.wildfire.main.entitydata;
 
-import com.wildfire.main.config.ConfigKey;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.Configuration;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.PacketCodec;

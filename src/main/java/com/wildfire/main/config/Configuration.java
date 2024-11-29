@@ -18,6 +18,12 @@
 
 package com.wildfire.main.config;
 
+import com.wildfire.main.config.core.AbstractConfiguration;
+import com.wildfire.main.config.keys.BooleanConfigKey;
+import com.wildfire.main.config.keys.FloatConfigKey;
+import com.wildfire.main.config.keys.GenderConfigKey;
+import com.wildfire.main.config.keys.UUIDConfigKey;
+
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 

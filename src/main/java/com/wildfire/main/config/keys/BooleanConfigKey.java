@@ -16,23 +16,24 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-package com.wildfire.main.config;
+package com.wildfire.main.config.keys;
 
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
-import com.wildfire.main.Gender;
+import com.google.gson.JsonObject;
 
-public class GenderConfigKey extends EnumConfigKey<Gender> {
-    public GenderConfigKey(String key) {
-        super(key, Gender.MALE, Gender.BY_ID);
+public class BooleanConfigKey extends ConfigKey<Boolean> {
+
+    public BooleanConfigKey(String key, boolean defaultValue) {
+        super(key, defaultValue);
     }
 
     @Override
-    protected Gender read(JsonElement element) {
-        // TODO is this still necessary? only extraordinarily old configs should still have this as a boolean
-        if(element instanceof JsonPrimitive primitive && primitive.isBoolean()) {
-            return primitive.getAsBoolean() ? Gender.MALE : Gender.FEMALE;
-        }
-        return super.read(element);
+    protected Boolean read(JsonElement element) {
+        return element.isJsonPrimitive() ? element.getAsJsonPrimitive().getAsBoolean() : defaultValue;
+    }
+
+    @Override
+    public void save(JsonObject object, Boolean value) {
+        object.addProperty(key, value);
     }
 }
