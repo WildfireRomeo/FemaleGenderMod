@@ -45,7 +45,7 @@ public record Breasts(Vector3fc offset, boolean uniboob, float cleavage) {
     );
 
     /**
-     * Update offsets on the provided {@link Configuration}
+     * Copy the provided {@link Vector3fc offsets} to the provided {@link Configuration}
      */
     public static void updateOffsets(Configuration config, Vector3fc offsets) {
         config.breastsXOffset.set(offsets.x());
@@ -54,7 +54,7 @@ public record Breasts(Vector3fc offset, boolean uniboob, float cleavage) {
     }
 
     /**
-     * Copy settings from the provided {@link Breasts breasts data} onto the current instance
+     * Copy settings from the provided {@link Breasts breasts data} onto the provided {@link Configuration}
      */
     public static void applyTo(Configuration config, Breasts breasts) {
         updateOffsets(config, breasts.offset());
