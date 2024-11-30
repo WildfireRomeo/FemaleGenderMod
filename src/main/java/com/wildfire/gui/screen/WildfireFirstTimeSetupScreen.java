@@ -126,6 +126,7 @@ public class WildfireFirstTimeSetupScreen extends BaseWildfireScreen {
 
 	@Override
 	protected void addScreenNarrations(NarrationMessageBuilder messageBuilder) {
+		// TODO this makes the narration very long, but it's a lot better than having no narration.
 		messageBuilder.put(NarrationPart.TITLE, TITLE);
 		messageBuilder.put(NarrationPart.HINT, Text.empty().append(DESCRIPTION).append("\n\n").append(NOTICE));
 		this.addElementNarrations(messageBuilder);

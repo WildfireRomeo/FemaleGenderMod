@@ -138,13 +138,13 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
         //Breast Physics Tab
 
         this.addDrawableChild(this.btnBreastPhysics = new WildfireButton(this.width / 2 - 36, tabOffsetY - 2, 166, 20,
-                Text.translatable("wildfire_gender.char_settings.physics", plr.hasBreastPhysics() ? ENABLED : DISABLED), button -> {
+                Text.translatable("wildfire_gender.char_settings.physics", enabled(plr.config().breastPhysics)), button -> {
             var enablePhysics = plr.config().breastPhysics.getAndUpdate(v -> !v);
 
-            this.bounceSlider.active = plr.hasBreastPhysics();
-            this.floppySlider.active = plr.hasBreastPhysics();
-            this.btnOverrideArmorPhys.active = plr.hasBreastPhysics();
-            this.btnDualPhysics.active = plr.hasBreastPhysics();
+            this.bounceSlider.active = enablePhysics;
+            this.floppySlider.active = enablePhysics;
+            this.btnOverrideArmorPhys.active = enablePhysics;
+            this.btnDualPhysics.active = enablePhysics;
 
             button.setMessage(Text.translatable("wildfire_gender.char_settings.physics", enabled(enablePhysics)));
             plr.save();
@@ -345,14 +345,10 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int state) {
         //Ensure all sliders are saved
-        breastSlider.save();
-        xOffsetBoobSlider.save();
-        yOffsetBoobSlider.save();
-        zOffsetBoobSlider.save();
-        cleavageSlider.save();
-        floppySlider.save();
-        bounceSlider.save();
-        voicePitchSlider.save();
+        children().stream()
+                .filter(element -> element instanceof WildfireSlider)
+                .map(element -> (WildfireSlider) element)
+                .forEach(WildfireSlider::save);
         return super.mouseReleased(mouseX, mouseY, state);
     }
 }
