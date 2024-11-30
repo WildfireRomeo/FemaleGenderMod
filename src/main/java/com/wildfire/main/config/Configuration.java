@@ -28,7 +28,7 @@ import com.wildfire.main.config.keys.GenderConfigKey;
 public class Configuration extends AbstractConfiguration {
 
 	private static final String CONFIG_DIR = "WildfireGender";
-	public static final Configuration DEFAULTS;
+	public static final Configuration DEFAULTS = new Configuration();
 
 	private final boolean allowSaving;
 
@@ -65,7 +65,6 @@ public class Configuration extends AbstractConfiguration {
 	}
 
 	static {
-		DEFAULTS = new Configuration();
 		DEFAULTS.values().forEach(ConfigKey::makeImmutable);
 	}
 }

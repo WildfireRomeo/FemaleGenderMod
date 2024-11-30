@@ -128,12 +128,13 @@ public class WildfireBreastPresetList extends EntryListWidget<WildfireBreastPres
             this.thumbnail = nInfo.ident;
             btnOpenGUI = new WildfireButton(0, 0, getRowWidth() - 6, itemHeight, Text.empty(), button -> {
                 PlayerConfig plr = Objects.requireNonNull(parent.getPlayer(), "getPlayer()");
-                /*plr.updateBustSize(nInfo.data.get(BreastPresetConfiguration.BUST_SIZE));
-                plr.getBreasts().updateXOffset(nInfo.data.get(BreastPresetConfiguration.BREASTS_OFFSET_X));
-                plr.getBreasts().updateYOffset(nInfo.data.get(BreastPresetConfiguration.BREASTS_OFFSET_Y));
-                plr.getBreasts().updateZOffset(nInfo.data.get(BreastPresetConfiguration.BREASTS_OFFSET_Z));
-                plr.getBreasts().updateCleavage(nInfo.data.get(BreastPresetConfiguration.BREASTS_CLEAVAGE));
-                plr.getBreasts().updateUniboob(nInfo.data.get(BreastPresetConfiguration.BREASTS_UNIBOOB));*/
+                var cfg = plr.config();
+                cfg.bustSize.copy(nInfo.data.bustSize);
+                cfg.breastsXOffset.copy(nInfo.data.breastsXOffset);
+                cfg.breastsYOffset.copy(nInfo.data.breastsYOffset);
+                cfg.breastsZOffset.copy(nInfo.data.breastsZOffset);
+                cfg.breastsCleavage.copy(nInfo.data.cleavage);
+                cfg.breastsUniboob.copy(nInfo.data.uniboob);
                 plr.save();
             });
         }

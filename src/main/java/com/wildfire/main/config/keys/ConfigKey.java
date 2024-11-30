@@ -36,23 +36,48 @@ public abstract class ConfigKey<TYPE> {
         this.value = defaultValue;
     }
 
+    /**
+     * @return The key that this is stored in {@link JsonObject}s as
+     */
     public String getKey() {
         return key;
     }
 
+    /**
+     * @return The default value provided when this {@link ConfigKey} was created
+     */
     public TYPE getDefault() {
         return defaultValue;
     }
 
+    /**
+     * @return The current stored value
+     */
     public TYPE get() {
         return value;
     }
 
+    /**
+     * Set the value of this {@link ConfigKey}
+     *
+     * @param value The value to set
+     *
+     * @throws UnsupportedOperationException When attempting to modify an immutable key
+     */
     public void set(TYPE value) {
         if(isImmutable) {
             throw new UnsupportedOperationException("Immutable keys may not be modified");
         }
         if(validate(value)) this.value = value;
+    }
+
+    /**
+     * Copy the value of another {@link ConfigKey} to this key
+     *
+     * @param from The {@link ConfigKey} to copy from
+     */
+    public void copy(ConfigKey<TYPE> from) {
+       set(from.get());
     }
 
     @ApiStatus.Internal

@@ -20,6 +20,7 @@ package com.wildfire.main.config.core;
 
 import com.google.common.collect.ForwardingMap;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonWriter;
@@ -28,11 +29,12 @@ import com.wildfire.main.WildfireHelper;
 import com.wildfire.main.config.keys.ConfigKey;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Unmodifiable;
+import org.jetbrains.annotations.UnmodifiableView;
 
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -45,22 +47,21 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 	private static final TypeAdapter<JsonObject> ADAPTER = new Gson().getAdapter(JsonObject.class);
 
 	private final Path file;
+	private final Map<String, JsonElement> unrecognized = new HashMap<>();
 	private final Map<String, ConfigKey<?>> values = new HashMap<>();
 
-	protected AbstractConfiguration(String fileName) {
-		this.file = FabricLoader.getInstance().getConfigDir().resolve(fileName + ".json");
+	protected AbstractConfiguration(String... path) {
+		this.file = resolvePath(path);
 	}
 
-	protected AbstractConfiguration(String directory, String cfgName) {
-		Path saveDir = FabricLoader.getInstance().getConfigDir().resolve(directory);
-		if(supportsSaving() && !Files.isDirectory(saveDir)) {
-			try {
-				Files.createDirectory(saveDir);
-			} catch(IOException e) {
-				WildfireGender.LOGGER.error("Failed to create config directory", e);
-			}
+	protected Path resolvePath(String... names) {
+		var items = Arrays.stream(names).toList();
+		var fileName = items.removeLast();
+		var path = FabricLoader.getInstance().getConfigDir();
+		while(!items.isEmpty()) {
+			path = path.resolve(items.removeFirst());
 		}
-		this.file = saveDir.resolve(cfgName + ".json");
+		return path.resolve(fileName + ".json");
 	}
 
 	/**
@@ -70,6 +71,7 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 	 *
 	 * @return {@code true} if this config allows loading and saving to/from disk
 	 */
+	@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 	public boolean supportsSaving() {
 		return WildfireHelper.onClient();
 	}
@@ -77,7 +79,7 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 	/**
 	 * Register a new {@link ConfigKey} for use in this configuration
 	 */
-	protected <TYPE, KEY extends ConfigKey<TYPE>> KEY register(KEY key) {
+	protected <TYPE, KEY extends ConfigKey<TYPE>> KEY register(@NotNull KEY key) {
 		if(containsKey(key.getKey())) {
 			throw new IllegalArgumentException("Configuration key " + key.getKey() + " is already registered");
 		}
@@ -97,7 +99,17 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 	 */
 	public void save() {
 		if(!supportsSaving()) return;
+
+		if(Files.notExists(file.getParent())) {
+			try {
+				Files.createDirectories(file.getParent());
+			} catch(IOException e) {
+				throw new UncheckedIOException(e);
+			}
+		}
+
 		var json = toJson();
+		unrecognized.forEach(json::add);
 		try(FileWriter writer = new FileWriter(file.toFile()); JsonWriter jsonWriter = new JsonWriter(writer)) {
 			jsonWriter.setIndent("\t");
 			ADAPTER.write(jsonWriter, json);
@@ -113,6 +125,10 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 		if(!supportsSaving() || !exists()) return;
 		try(FileReader configurationFile = new FileReader(file.toFile())) {
 			JsonObject obj = new Gson().fromJson(configurationFile, JsonObject.class);
+			unrecognized.clear();
+			obj.asMap().keySet().stream()
+					.filter(key -> !containsKey(key))
+					.forEach(key -> unrecognized.put(key, obj.get(key)));
 			apply(obj);
 		} catch(IOException e) {
 			WildfireGender.LOGGER.error("Failed to load config file", e);
@@ -129,14 +145,14 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 	}
 
 	@Override
-	protected final @NotNull @Unmodifiable Map<String, ConfigKey<?>> delegate() {
+	protected final @NotNull @UnmodifiableView Map<String, ConfigKey<?>> delegate() {
 		return Collections.unmodifiableMap(values);
 	}
 
 	/**
 	 * @return A new {@link JsonObject} containing all the values saved in this configuration
 	 */
-	public final JsonObject toJson() {
+	public final @NotNull JsonObject toJson() {
 		var json = new JsonObject();
 		this.values().forEach(v -> v.save(json));
 		return json;
