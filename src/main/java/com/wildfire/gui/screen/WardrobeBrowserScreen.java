@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import com.wildfire.gui.WildfireButton;
 import com.wildfire.main.cloud.CloudSync;
 import com.wildfire.main.config.GlobalConfig;
+import com.wildfire.main.config.enums.ShowPlayerListMode;
 import com.wildfire.main.entitydata.PlayerConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -76,8 +77,7 @@ public class WardrobeBrowserScreen extends BaseWildfireScreen {
 			Text.translatable("wildfire_gender.always_show_list", GlobalConfig.INSTANCE.alwaysShowList.get().text()),
 			button -> {
 				var config = GlobalConfig.INSTANCE;
-				var newVal = config.alwaysShowList.get().next();
-				config.alwaysShowList.set(newVal);
+				var newVal = config.alwaysShowList.getAndUpdate(ShowPlayerListMode::next);
 				config.save();
 				button.setMessage(Text.translatable("wildfire_gender.always_show_list", newVal.text()));
 				button.setTooltip(newVal.tooltip());
@@ -85,14 +85,8 @@ public class WardrobeBrowserScreen extends BaseWildfireScreen {
 		listButton.setTooltip(GlobalConfig.INSTANCE.alwaysShowList.get().tooltip());
 
 		this.addDrawableChild(new WildfireButton(this.width / 2 - 130, this.height / 2 + 33, 80, 15, plr.getGender().getDisplayName(), button -> {
-			Gender gender = switch (plr.getGender()) {
-				case MALE -> Gender.FEMALE;
-				case FEMALE -> Gender.OTHER;
-				case OTHER -> Gender.MALE;
-			};
-			plr.config().gender.set(gender);
+			plr.config().gender.getAndUpdate(Gender::next);
 			plr.save();
-			button.setMessage(getGenderLabel(gender));
 			clearAndInit();
 		}));
 
@@ -131,10 +125,6 @@ public class WardrobeBrowserScreen extends BaseWildfireScreen {
 
 	    super.init();
   	}
-
-	private Text getGenderLabel(Gender gender) {
-		return Text.translatable("wildfire_gender.label.gender").append(" - ").append(gender.getDisplayName());
-	}
 
 	@Override
 	public void renderBackground(DrawContext ctx, int mouseX, int mouseY, float delta) {

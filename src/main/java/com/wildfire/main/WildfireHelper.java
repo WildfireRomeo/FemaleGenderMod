@@ -90,7 +90,7 @@ public final class WildfireHelper {
     }
 
     public static Codec<Float> boundedFloat(ConfigKey<Float> configKey) {
-        return boundedFloat(((FloatConfigKey) configKey).getMinInclusive(), ((FloatConfigKey) configKey).getMaxInclusive());
+        return boundedFloat((FloatConfigKey) configKey);
     }
 
     public static Codec<Float> boundedFloat(FloatConfigKey configKey) {

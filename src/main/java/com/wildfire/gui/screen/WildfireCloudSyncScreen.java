@@ -64,8 +64,7 @@ public class WildfireCloudSyncScreen extends BaseWildfireScreen {
 				Text.translatable("wildfire_gender.cloud.status", enabled(CloudSync.isEnabled())),
 				button -> {
 					var config = GlobalConfig.INSTANCE;
-					var newValue = !config.cloudSyncEnabled.get();
-					config.cloudSyncEnabled.set(newValue);
+					config.cloudSyncEnabled.getAndUpdate(v -> !v);
 					button.setMessage(Text.translatable("wildfire_gender.cloud.status", enabled(CloudSync.isEnabled())));
 					btnAutomaticSync.setActive(CloudSync.isEnabled());
 					btnAutomaticSync.setMessage(automaticSyncText());
@@ -75,8 +74,7 @@ public class WildfireCloudSyncScreen extends BaseWildfireScreen {
 		this.addDrawableChild(btnAutomaticSync = new WildfireButton(xPos, yPos + 20, 157, 20, automaticSyncText(),
 				button -> {
 					var config = GlobalConfig.INSTANCE;
-					var newVal = !config.automaticCloudSync.get();
-					config.automaticCloudSync.set(newVal);
+					config.automaticCloudSync.getAndUpdate(v -> !v);
 					button.setMessage(automaticSyncText());
 				}));
 		btnAutomaticSync.setTooltip(Tooltip.of(Text.empty()

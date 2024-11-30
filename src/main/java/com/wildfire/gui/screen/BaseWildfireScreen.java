@@ -51,6 +51,14 @@ public abstract class BaseWildfireScreen extends Screen {
         return false;
     }
 
+    protected Text yesNo(ConfigKey<Boolean> config) {
+        return yesNo(config.get());
+    }
+
+    protected Text yesNo(boolean condition) {
+        return condition ? WildfireLocalization.YES : WildfireLocalization.NO;
+    }
+
     protected Text enabled(ConfigKey<Boolean> config) {
         return enabled(config.get());
     }

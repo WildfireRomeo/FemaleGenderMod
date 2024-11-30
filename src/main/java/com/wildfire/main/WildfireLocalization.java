@@ -21,12 +21,12 @@ package com.wildfire.main;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-//I mostly made this file for the "status log" text in the cloud sync screen.
 public class WildfireLocalization {
-
     public static final Text ENABLED = Text.translatable("wildfire_gender.label.enabled").formatted(Formatting.GREEN);
     public static final Text DISABLED = Text.translatable("wildfire_gender.label.disabled").formatted(Formatting.RED);
     public static final Text OFF = Text.translatable("wildfire_gender.label.off");
+    public static final Text YES = Text.translatable("wildfire_gender.label.yes").formatted(Formatting.GREEN);
+    public static final Text NO = Text.translatable("wildfire_gender.label.no").formatted(Formatting.RED);
 
     public static final Text SYNC_LOG_AUTHENTICATING = Text.translatable("wildfire_gender.sync_log.authenticating");
     public static final Text SYNC_LOG_AUTHENTICATION_FAILED = Text.translatable("wildfire_gender.sync_log.authentication_failed");
@@ -40,7 +40,4 @@ public class WildfireLocalization {
 
     public static final Text SYNC_LOG_GET_SINGLE_PROFILE = Text.translatable("wildfire_gender.sync_log.get_single_profile");
     public static final Text SYNC_LOG_GET_MULTIPLE_PROFILES = Text.translatable("wildfire_gender.sync_log.get_multiple_profiles");
-
-
-
 }

@@ -22,6 +22,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.ApiStatus;
 
+import java.util.function.Function;
+
 public abstract class ConfigKey<TYPE> {
 
     private boolean isImmutable = false;
@@ -53,7 +55,7 @@ public abstract class ConfigKey<TYPE> {
     /**
      * @return The current stored value
      */
-    public TYPE get() {
+    public final TYPE get() {
         return value;
     }
 
@@ -64,11 +66,22 @@ public abstract class ConfigKey<TYPE> {
      *
      * @throws UnsupportedOperationException When attempting to modify an immutable key
      */
-    public void set(TYPE value) {
+    public final void set(TYPE value) {
         if(isImmutable) {
             throw new UnsupportedOperationException("Immutable keys may not be modified");
         }
         if(validate(value)) this.value = value;
+    }
+
+    /**
+     * Update the current stored value with the provided mapper function, returning the newly set value
+     *
+     * @param mapper A function that returns the new value to set
+     * @return The new value; this may be the same as the old value if the mapper returned {@link #validate an invalid value}.
+     */
+    public final TYPE getAndUpdate(Function<TYPE, TYPE> mapper) {
+        set(mapper.apply(value));
+        return value;
     }
 
     /**

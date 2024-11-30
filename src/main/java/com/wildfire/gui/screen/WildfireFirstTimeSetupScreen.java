@@ -23,11 +23,12 @@ import com.wildfire.gui.WildfireButton;
 import com.wildfire.main.WildfireGender;
 import com.wildfire.main.WildfireGenderClient;
 import com.wildfire.main.config.GlobalConfig;
-import com.wildfire.main.entitydata.PlayerConfig;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -41,8 +42,6 @@ import java.util.concurrent.CompletionException;
 
 @Environment(EnvType.CLIENT)
 public class WildfireFirstTimeSetupScreen extends BaseWildfireScreen {
-
-	//TODO: PROPER TRANSLATIONS
 
 	private static final Text TITLE = Text.translatable("wildfire_gender.first_time_setup.title").formatted(Formatting.UNDERLINE);
 	private static final Text DESCRIPTION = Text.translatable("wildfire_gender.first_time_setup.description");
@@ -123,6 +122,13 @@ public class WildfireFirstTimeSetupScreen extends BaseWildfireScreen {
 				clientConfig.needsCloudSync = true;
 			}
 		});
+	}
+
+	@Override
+	protected void addScreenNarrations(NarrationMessageBuilder messageBuilder) {
+		messageBuilder.put(NarrationPart.TITLE, TITLE);
+		messageBuilder.put(NarrationPart.HINT, Text.empty().append(DESCRIPTION).append("\n\n").append(NOTICE));
+		this.addElementNarrations(messageBuilder);
 	}
 
 	@Override

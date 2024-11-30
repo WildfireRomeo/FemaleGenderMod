@@ -55,7 +55,7 @@ public abstract class AbstractConfiguration extends ForwardingMap<String, Config
 	}
 
 	protected Path resolvePath(String... names) {
-		var items = Arrays.stream(names).toList();
+		var items = new ArrayList<>(List.of(names));
 		var fileName = items.removeLast();
 		var path = FabricLoader.getInstance().getConfigDir();
 		while(!items.isEmpty()) {
