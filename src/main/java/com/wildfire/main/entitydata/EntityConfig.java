@@ -25,6 +25,7 @@ import com.wildfire.api.IGenderArmor;
 import com.wildfire.main.WildfireGender;
 import com.wildfire.main.WildfireHelper;
 import com.wildfire.main.config.Configuration;
+import com.wildfire.main.config.GlobalConfig;
 import com.wildfire.main.config.enums.Gender;
 import com.wildfire.physics.BreastPhysics;
 import net.fabricmc.api.EnvType;
@@ -146,7 +147,7 @@ public class EntityConfig {
 	}
 
 	public boolean getArmorPhysicsOverride() {
-		return cfg.armorPhysicsOverride.get();
+		return GlobalConfig.INSTANCE.armorPhysicsOverride.get();
 	}
 
 	public boolean showBreastsInArmor() {

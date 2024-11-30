@@ -22,6 +22,7 @@ import com.wildfire.gui.GuiUtils;
 import com.wildfire.gui.WildfireBreastPresetList;
 import com.wildfire.gui.WildfireButton;
 import com.wildfire.gui.WildfireSlider;
+import com.wildfire.main.config.GlobalConfig;
 import com.wildfire.main.config.enums.Gender;
 import com.wildfire.main.WildfireGender;
 import com.wildfire.main.entitydata.PlayerConfig;
@@ -162,10 +163,10 @@ public class WildfireBreastCustomizationScreen extends BaseWildfireScreen {
 
 
         this.addDrawableChild(btnOverrideArmorPhys = new WildfireButton(this.width / 2 - 36, tabOffsetY + 70, 166, 20,
-                Text.translatable("wildfire_gender.char_settings.override_armor_physics", enabled(plr.config().armorPhysicsOverride)), button -> {
-            plr.config().armorPhysicsOverride.getAndUpdate(v -> !v);
+                Text.translatable("wildfire_gender.char_settings.override_armor_physics", enabled(GlobalConfig.INSTANCE.armorPhysicsOverride)), button -> {
+            GlobalConfig.INSTANCE.armorPhysicsOverride.getAndUpdate(v -> !v);
             plr.save();
-            button.setMessage(Text.translatable("wildfire_gender.char_settings.override_armor_physics", enabled(plr.config().armorPhysicsOverride)));
+            button.setMessage(Text.translatable("wildfire_gender.char_settings.override_armor_physics", enabled(GlobalConfig.INSTANCE.armorPhysicsOverride)));
         }, Tooltip.of(Text.translatable("wildfire_gender.tooltip.override_armor_physics.line1")
                 .append("\n\n")
                 .append(Text.translatable("wildfire_gender.tooltip.override_armor_physics.line2")))

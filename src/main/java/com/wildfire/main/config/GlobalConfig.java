@@ -35,6 +35,8 @@ public class GlobalConfig extends AbstractConfiguration {
 
     public final ConfigKey<Boolean> firstTimeLoad = register(new BooleanConfigKey("firstTimeLoad", true));
 
+    public final ConfigKey<Boolean> armorPhysicsOverride = register(new BooleanConfigKey("armor_physics_override", false));
+
     public final com.wildfire.main.config.keys.ConfigKey<Boolean> cloudSyncEnabled = register(new BooleanConfigKey("cloud_sync", false));
     public final ConfigKey<Boolean> automaticCloudSync = register(new BooleanConfigKey("sync_player_data", false));
     // see CloudSync#DEFAULT_CLOUD_URL for the actual default
