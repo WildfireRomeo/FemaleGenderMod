@@ -106,12 +106,12 @@ public final class WildfireHelper {
     //Returns true when within the Christmas date(s). Taken from the Chest entity renderer
     public static boolean isAroundChristmas() {
         Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26;
+        return calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26;
     }
 
-    //Returns true when in the time the minecraft wiki says that some special things are happening. Taken from the christmas functions
+    //Returns true when in the time the minecraft wiki says that some special things are happening. Taken from the Christmas functions
     public static boolean isAroundHalloween() {
         Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH) + 1 == 10 && calendar.get(Calendar.DATE) >= 20 ||calendar.get(Calendar.MONTH) + 1 == 11 && calendar.get(Calendar.DATE) <= 3;
+        return calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 20 ||calendar.get(Calendar.MONTH) == Calendar.NOVEMBER && calendar.get(Calendar.DATE) <= 3;
     }
 }
