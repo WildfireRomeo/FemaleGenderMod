@@ -59,6 +59,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 
 import static com.wildfire.main.WildfireHelper.isAroundChristmas;
+import static com.wildfire.main.WildfireHelper.isAroundHalloween;
 
 @Environment(EnvType.CLIENT)
 public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntityModel<S>> extends FeatureRenderer<S, M> {
@@ -71,6 +72,8 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 	private final FeatureRendererContext<S, M> context;
 
 	private boolean isChristmas = isAroundChristmas();
+//	private boolean isHalloween = isAroundHalloween();
+	private boolean isHalloween = true;
 
 	private float preBreastSize, preBreastOffsetZ;
 	private Breasts breasts;
@@ -166,6 +169,31 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 			try {
 				int overlay = LivingEntityRenderer.getOverlay(state, 0);
 				RenderLayer hatRenderType = RenderLayer.getEntityTranslucent(Identifier.of(WildfireGender.MODID, "textures/santa_hat.png"));
+				if (hatRenderType == null) return;
+				VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(hatRenderType);
+
+				if (state.baby) {
+					matrixStack.scale(state.ageScale, state.ageScale, state.ageScale);
+					matrixStack.translate(0f, 0.75f, 0f);
+				}
+
+				ModelPart mPart = getContextModel().head;
+				matrixStack.translate(mPart.pivotX * 0.0625f, mPart.pivotY * 0.0625f, mPart.pivotZ * 0.0625f);
+				if (mPart.roll != 0.0F || mPart.yaw != 0.0F || mPart.pitch != 0.0F) {
+					matrixStack.multiply(new Quaternionf().rotationZYX(mPart.roll, mPart.yaw, mPart.pitch));
+				}
+
+				santaHat.render(matrixStack, vertexConsumer, light, overlay);
+			} catch (Exception e) {
+				WildfireGender.LOGGER.error("Failed to render breast layer", e);
+			}
+		}
+
+		//Halloween mask (Uses santa but recolord because I am not creative)
+		if(isHalloween && entityConfig instanceof PlayerConfig plrConfig && plrConfig.hasHolidayThemes()) {
+			try {
+				int overlay = LivingEntityRenderer.getOverlay(state, 0);
+				RenderLayer hatRenderType = RenderLayer.getEntityTranslucent(Identifier.of(WildfireGender.MODID, "textures/halloween_mask.png"));
 				if (hatRenderType == null) return;
 				VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(hatRenderType);
 
