@@ -111,6 +111,6 @@ public final class WildfireHelper {
 
     public static boolean isAroundHalloween() {
         Calendar calendar = Calendar.getInstance();
-        return calender.get(Calendar.MONTH) + 1 == 10 && calendar.get(Calendar.DATE) >= 20 ||calendar.get(Calendar.MONTH) + 1 == 11 && calendar.get(Calendar.DATE) <= 3;
+        return calendar.get(Calendar.MONTH) + 1 == 10 && calendar.get(Calendar.DATE) >= 20 ||calendar.get(Calendar.MONTH) + 1 == 11 && calendar.get(Calendar.DATE) <= 3;
     }
 }
