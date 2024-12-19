@@ -72,8 +72,7 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 	private final FeatureRendererContext<S, M> context;
 
 	private boolean isChristmas = isAroundChristmas();
-//	private boolean isHalloween = isAroundHalloween();
-	private boolean isHalloween = true;
+	private boolean isHalloween = isAroundHalloween();
 
 	private float preBreastSize, preBreastOffsetZ;
 	private Breasts breasts;
@@ -189,7 +188,7 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 			}
 		}
 
-		//Halloween mask (Uses santa but recolord because I am not creative)
+		//Halloween mask (Uses santa but recolored, because I'm not creative)
 		if(isHalloween && entityConfig instanceof PlayerConfig plrConfig && plrConfig.hasHolidayThemes()) {
 			try {
 				int overlay = LivingEntityRenderer.getOverlay(state, 0);
