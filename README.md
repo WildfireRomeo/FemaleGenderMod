@@ -1,9 +1,5 @@
-![Mod Banner](https://i.imgur.com/mtKmgT9.png)
-# Wildfire's Female Gender Mod
 
-### Description
-The mod's primary purpose is to add breasts to your Minecraft player to give it a more unique appearance than the generic model,
-It works on client-side without issues but if you wish to add syncing support then this mod must be present on the server aswell.
+# Wildfire's GM
 
 ## Default Controls
 
