@@ -40,9 +40,15 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 	private static final Identifier SANTA_HAT = Identifier.of(WildfireGender.MODID, "textures/santa_hat.png");
 	private static final boolean christmas = isAroundChristmas();
 
+	private final ModelPart halloweenMask;
+
+	private static final Identifier HALLOWEEN_MASK = Identifier.of(WildfireGender.MODID, "textures/halloween_mask.png");
+	private static final boolean halloween = isAroundHalloween();
+
 	public HolidayFeaturesRenderer(FeatureRendererContext<PlayerEntityRenderState, PlayerEntityModel> context) {
 		super(context);
 		santaHat = createSantaHat().createModel();
+		halloweenMask = createHalloweenMask().createModel();
 	}
 
 	@Override
@@ -83,7 +89,43 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 		matrixStack.pop();
 	}
 
+	private void renderHalloweenMask(PlayerEntityRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
+		if(!halloween) return;
+
+		matrixStack.push();
+		try {
+			int overlay = LivingEntityRenderer.getOverlay(state, 0);
+			RenderLayer hatRenderType = RenderLayer.getEntityTranslucent(HALLOWEEN_MASK);
+			if(hatRenderType == null) return;
+			VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(hatRenderType);
+
+			if(state.baby) {
+				matrixStack.scale(state.ageScale, state.ageScale, state.ageScale);
+				matrixStack.translate(0f, 0.75f, 0f);
+			}
+
+			ModelPart mPart = getContextModel().head;
+			matrixStack.translate(mPart.pivotX * 0.0625f, mPart.pivotY * 0.0625f, mPart.pivotZ * 0.0625f);
+			if(mPart.roll != 0.0F || mPart.yaw != 0.0F || mPart.pitch != 0.0F) {
+				matrixStack.multiply(new Quaternionf().rotationZYX(mPart.roll, mPart.yaw, mPart.pitch));
+			}
+
+			halloweenMask.render(matrixStack, vertexConsumer, light, overlay);
+		} catch(Exception e) {
+			WildfireGender.LOGGER.error("Failed to render breast layer", e);
+		}
+		matrixStack.pop();
+	}
+
 	private static TexturedModelData createSantaHat() {
+		Dilation dilation = new Dilation(0.75f);
+		ModelData modelData = new ModelData();
+		ModelPartData modelPartData = modelData.getRoot();
+		modelPartData.addChild("santa_hat", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, dilation), ModelTransform.NONE);
+		return TexturedModelData.of(modelData, 32, 32);
+	}
+
+	private static TexturedModelData createHalloweenMask() {
 		Dilation dilation = new Dilation(0.75f);
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
@@ -94,5 +136,12 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 	public static boolean isAroundChristmas() {
 		Calendar calendar = Calendar.getInstance();
 		return calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26;
+	}
+
+	public static boolean isAroundHalloween() {
+		Calendar calendar = Calendar.getInstance();
+		//Remove line 143 and 144 and uncomment line 145 before this pr is merged (or better before this commit is pushed)
+		return true;
+//		return (calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 20) || (calendar.get(Calendar.MONTH) == Calendar.NOVEMBER && calendar.get(Calendar.DATE) <= 3);
 	}
 }
