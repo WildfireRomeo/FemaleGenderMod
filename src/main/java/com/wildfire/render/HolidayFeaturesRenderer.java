@@ -32,10 +32,11 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.joml.Quaternionf;
 
-import static net.minecraft.client.render.block.entity.ChestBlockEntityRenderer.isAroundChristmas;
+import java.util.Calendar;
 
 public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderState, PlayerEntityModel> {
 	private final ModelPart santaHat;
+	private static final boolean christmas = isAroundChristmas();
 
 	public HolidayFeaturesRenderer(FeatureRendererContext<PlayerEntityRenderState, PlayerEntityModel> context) {
 		super(context);
@@ -53,7 +54,7 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 	}
 
 	private void renderSantaHat(PlayerEntityRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
-		if(!isAroundChristmas()) return;
+		if(!christmas) return;
 
 		matrixStack.push();
 		try {
@@ -86,5 +87,10 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 		ModelPartData modelPartData = modelData.getRoot();
 		modelPartData.addChild("santa_hat", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, dilation), ModelTransform.NONE);
 		return TexturedModelData.of(modelData, 32, 32);
+	}
+
+	public static boolean isAroundChristmas() {
+		Calendar calendar = Calendar.getInstance();
+		return calendar.get(Calendar.MONTH) == Calendar.DECEMBER && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26;
 	}
 }
