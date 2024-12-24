@@ -130,7 +130,7 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 		Dilation dilation = new Dilation(0.75f);
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		modelPartData.addChild("santa_hat", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, dilation), ModelTransform.NONE);
+		modelPartData.addChild("halloween_mask", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, dilation), ModelTransform.NONE);
 		return TexturedModelData.of(modelData, 32, 32);
 	}
 
