@@ -26,7 +26,6 @@ import com.wildfire.api.IGenderArmor;
 import com.wildfire.api.WildfireAPI;
 import com.wildfire.main.config.FloatConfigKey;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.render.block.entity.ChestBlockEntityRenderer;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import com.wildfire.api.impl.GenderArmor;
@@ -36,7 +35,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.util.TriState;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Calendar;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Function;
 
@@ -101,11 +99,5 @@ public final class WildfireHelper {
 
     public static boolean onClient() {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
-    }
-
-    //Returns true when within the Christmas date(s). Taken from the Chest entity renderer
-    public static boolean isAroundChristmas() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26;
     }
 }

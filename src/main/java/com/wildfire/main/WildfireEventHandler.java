@@ -31,6 +31,7 @@ import com.wildfire.main.networking.ServerboundSyncPacket;
 import com.wildfire.main.networking.WildfireSync;
 import com.wildfire.render.GenderArmorLayer;
 import com.wildfire.render.GenderLayer;
+import com.wildfire.render.HolidayFeaturesRenderer;
 import com.wildfire.render.RenderStateEntityCapture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -56,7 +57,6 @@ import net.minecraft.client.render.entity.ArmorStandEntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.ParrotEntityModel;
 import net.minecraft.client.render.entity.state.PlayerEntityRenderState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.client.util.math.MatrixStack;
@@ -213,6 +213,7 @@ public final class WildfireEventHandler {
 		if(entityRenderer instanceof PlayerEntityRenderer playerRenderer) {
 			registrationHelper.register(new GenderLayer<>(playerRenderer));
 			registrationHelper.register(new GenderArmorLayer<>(playerRenderer, context.getEquipmentModelLoader(), context.getEquipmentRenderer()));
+			registrationHelper.register(new HolidayFeaturesRenderer(playerRenderer));
 		} else if(entityRenderer instanceof ArmorStandEntityRenderer armorStandRenderer) {
 			registrationHelper.register(new GenderArmorLayer<>(armorStandRenderer, context.getEquipmentModelLoader(), context.getEquipmentRenderer()));
 		}
