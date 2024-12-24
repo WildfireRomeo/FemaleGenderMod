@@ -59,6 +59,7 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 		if(config == null || !config.hasHolidayThemes()) return;
 
 		renderSantaHat(state, matrices, vertexConsumers, light);
+		renderHalloweenMask(state, matrices, vertexConsumers, light);
 	}
 
 	private void renderSantaHat(PlayerEntityRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
@@ -140,8 +141,6 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 
 	public static boolean isAroundHalloween() {
 		Calendar calendar = Calendar.getInstance();
-		//Remove line 143 and 144 and uncomment line 145 before this pr is merged (or better before this commit is pushed)
-		return true;
-//		return (calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 20) || (calendar.get(Calendar.MONTH) == Calendar.NOVEMBER && calendar.get(Calendar.DATE) <= 3);
+		return (calendar.get(Calendar.MONTH) == Calendar.OCTOBER && calendar.get(Calendar.DATE) >= 20) || (calendar.get(Calendar.MONTH) == Calendar.NOVEMBER && calendar.get(Calendar.DATE) <= 3);
 	}
 }
