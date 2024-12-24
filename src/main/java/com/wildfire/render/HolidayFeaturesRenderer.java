@@ -36,6 +36,8 @@ import java.util.Calendar;
 
 public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderState, PlayerEntityModel> {
 	private final ModelPart santaHat;
+
+	private static final Identifier SANTA_HAT = Identifier.of(WildfireGender.MODID, "textures/santa_hat.png");
 	private static final boolean christmas = isAroundChristmas();
 
 	public HolidayFeaturesRenderer(FeatureRendererContext<PlayerEntityRenderState, PlayerEntityModel> context) {
@@ -59,8 +61,8 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 		matrixStack.push();
 		try {
 			int overlay = LivingEntityRenderer.getOverlay(state, 0);
-			RenderLayer hatRenderType = RenderLayer.getEntityTranslucent(Identifier.of(WildfireGender.MODID, "textures/santa_hat.png"));
-			if (hatRenderType == null) return;
+			RenderLayer hatRenderType = RenderLayer.getEntityTranslucent(SANTA_HAT);
+			if(hatRenderType == null) return;
 			VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(hatRenderType);
 
 			if(state.baby) {
@@ -75,7 +77,7 @@ public class HolidayFeaturesRenderer extends FeatureRenderer<PlayerEntityRenderS
 			}
 
 			santaHat.render(matrixStack, vertexConsumer, light, overlay);
-		} catch (Exception e) {
+		} catch(Exception e) {
 			WildfireGender.LOGGER.error("Failed to render breast layer", e);
 		}
 		matrixStack.pop();
