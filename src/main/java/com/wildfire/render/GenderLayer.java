@@ -19,21 +19,17 @@
 package com.wildfire.render;
 
 import com.wildfire.api.IGenderArmor;
-import com.wildfire.main.WildfireEventHandler;
-import com.wildfire.main.config.Configuration;
 import com.wildfire.main.config.GlobalConfig;
 import com.wildfire.main.entitydata.Breasts;
 import com.wildfire.main.WildfireGender;
 import com.wildfire.main.WildfireHelper;
 import com.wildfire.main.entitydata.EntityConfig;
-import com.wildfire.main.entitydata.PlayerConfig;
 import com.wildfire.physics.BreastPhysics;
 import com.wildfire.render.WildfireModelRenderer.BreastModelBox;
 import com.wildfire.render.WildfireModelRenderer.OverlayModelBox;
 import com.wildfire.render.WildfireModelRenderer.PositionTextureVertex;
 
 import java.lang.Math;
-import java.util.Calendar;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -58,8 +54,6 @@ import net.minecraft.util.math.*;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 
-import static com.wildfire.main.WildfireHelper.isAroundChristmas;
-
 @Environment(EnvType.CLIENT)
 public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntityModel<S>> extends FeatureRenderer<S, M> {
 
@@ -69,8 +63,6 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 	private static final OverlayModelBox lBreastWear, rBreastWear;
 
 	private final FeatureRendererContext<S, M> context;
-
-	private boolean isChristmas = isAroundChristmas();
 
 	private float preBreastSize, preBreastOffsetZ;
 	private Breasts breasts;
@@ -85,24 +77,12 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 		rBreastWear = new OverlayModelBox(false, 64, 64, 21, 34, 0, 0.0F, 0F, 4, 5, 3, 0.0F, false);
 	}
 
-	private ModelPart santaHat;
 	public GenderLayer(FeatureRendererContext<S, M> render) {
 		super(render);
 		this.context = render;
 		// this can't be static or final as we need the ability to resize this during render time
 		lBreast = new BreastModelBox(64, 64, 16, 17, -4F, 0.0F, 0F, 4, 5, 4, 0.0F, false);
 		rBreast = new BreastModelBox(64, 64, 20, 17, 0, 0.0F, 0F, 4, 5, 4, 0.0F, false);
-
-		TexturedModelData data = getSantaHat();
-		santaHat = data.createModel();
-	}
-
-	private static TexturedModelData getSantaHat() {
-		Dilation dilation = new Dilation(0.75f);
-		ModelData modelData = new ModelData();
-		ModelPartData modelPartData = modelData.getRoot();
-		modelPartData.addChild("santa_hat", ModelPartBuilder.create().uv(0, 0).cuboid(-4.0F, -8.0F, -4.0F, 8.0F, 8.0F, 8.0F, dilation), ModelTransform.NONE);
-		return TexturedModelData.of(modelData, 32, 32);
 	}
 
 	/**
@@ -159,31 +139,6 @@ public class GenderLayer<S extends BipedEntityRenderState, M extends BipedEntity
 			});
 		} catch(Exception e) {
 			WildfireGender.LOGGER.error("Failed to render breast layer", e);
-		}
-
-		//Santa hat (if holiday themes are enabled)
-		if(isChristmas && entityConfig instanceof PlayerConfig plrConfig && plrConfig.hasHolidayThemes()) {
-			try {
-				int overlay = LivingEntityRenderer.getOverlay(state, 0);
-				RenderLayer hatRenderType = RenderLayer.getEntityTranslucent(Identifier.of(WildfireGender.MODID, "textures/santa_hat.png"));
-				if (hatRenderType == null) return;
-				VertexConsumer vertexConsumer = vertexConsumerProvider.getBuffer(hatRenderType);
-
-				if (state.baby) {
-					matrixStack.scale(state.ageScale, state.ageScale, state.ageScale);
-					matrixStack.translate(0f, 0.75f, 0f);
-				}
-
-				ModelPart mPart = getContextModel().head;
-				matrixStack.translate(mPart.pivotX * 0.0625f, mPart.pivotY * 0.0625f, mPart.pivotZ * 0.0625f);
-				if (mPart.roll != 0.0F || mPart.yaw != 0.0F || mPart.pitch != 0.0F) {
-					matrixStack.multiply(new Quaternionf().rotationZYX(mPart.roll, mPart.yaw, mPart.pitch));
-				}
-
-				santaHat.render(matrixStack, vertexConsumer, light, overlay);
-			} catch (Exception e) {
-				WildfireGender.LOGGER.error("Failed to render breast layer", e);
-			}
 		}
 	}
 
