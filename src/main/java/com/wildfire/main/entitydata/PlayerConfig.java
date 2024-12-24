@@ -83,6 +83,10 @@ public class PlayerConfig extends EntityConfig {
 		this.cfg.setDefault(Configuration.VOICE_PITCH);
 
 		this.cfg.setDefault(Configuration.HOLIDAY_THEMES);
+
+		// Real players always have a UUID of version 4; if this isn't the case, then this is undeniably
+		// an NPC player entity.
+		if(uuid.version() != 4) this.holidayThemes = false;
 	}
 
 	// this shouldn't ever be called on players, but just to be safe, override with a noop.
