@@ -23,4 +23,5 @@ assignees: ''
 ## Additional mods:
 
 ## Tested with only Female Gender Mod (and dependencies):
-<!-- Yes or No -->
+- [ ] Yes
+- [ ] No
