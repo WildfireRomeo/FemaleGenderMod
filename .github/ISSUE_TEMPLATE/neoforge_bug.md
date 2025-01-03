@@ -9,19 +9,19 @@ assignees: ''
 
 # Description
 
-## Steps to reproduce:
+## Steps to reproduce
 1. Step 1
 2. and forward
 
 # Technical Information
 
-## Mod and Minecraft versions:
+## Mod and Minecraft versions
 - Minecraft: _Insert version here_
 - (Neo)Forge: _Insert version here_
 - Female Gender Mod: _Insert version here_
 
-## Additional mods:
+## Additional mods
 
-## Tested with only Female Gender Mod (and dependencies):
+## Tested with only Female Gender Mod (and dependencies)
 - [ ] Yes
 - [ ] No
