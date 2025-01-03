@@ -15,8 +15,8 @@ assignees: ''
 
 # Technical Information
 
-## Mod and Mc versions:
-- Mc: _Insert version here_
+## Mod and Minecraft versions:
+- Minecraft: _Insert version here_
 - (Neo)Forge: _Insert version here_
 - Female Gender Mod: _Insert version here_
 

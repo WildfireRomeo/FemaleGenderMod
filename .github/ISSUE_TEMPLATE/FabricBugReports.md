@@ -15,10 +15,10 @@ assignees: ''
 
 # Technical Information
 
-## Mod and Mc versions:
-- Mc: _Insert version here_
+## Mod and Minecraft versions:
+- Minecraft: _Insert version here_
 - Fabric: _Insert version here_
-- Fabric api: _Insert version here_
+- Fabric API: _Insert version here_
 - Female Gender Mod: _Insert version here_
 
 ## Additional mods:

@@ -10,8 +10,7 @@
 <!-- Provide a general summary of your changes in the Title above -->
 
 ## Related PRs and Issues:
-- Close # <!-- Add issue number after the # -->
-- Other Related Issues and PRs: # <!-- Add issue or PR number here -->
+<!-- Include any related PRs or issues here -->
 
 ## Needed before merge:
 <!-- Think of things like .png's or tests -->
