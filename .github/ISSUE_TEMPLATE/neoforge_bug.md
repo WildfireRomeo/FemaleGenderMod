@@ -2,7 +2,7 @@
 name: Bug Report for (Neo)Forge
 about: Use this template if you found a bug with Fabric
 title: "[(Neo)Forge]"
-labels: bug
+labels: Bug,Forge
 assignees: ''
 
 ---
