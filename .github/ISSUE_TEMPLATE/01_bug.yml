@@ -15,12 +15,18 @@ body:
   - type: input
     id: version
     attributes:
-      label: "What version are you using?"
-      description: |
-        Please include the Minecraft, mod, and mod loader versions you're using.
+      label: "What Minecraft & mod version are you using?"
+      placeholder: "Minecraft 1.x.y, Female Gender Mod x.y.z"
+    validations:
+      required: true
 
+  - type: input
+    id: modloader-version
+    attributes:
+      label: "What Fabric / NeoForge version are you using?"
+      description: |
         If you're using Fabric, please also include the relevant Fabric API version.
-      placeholder: "Minecraft 1.x.y, Female Gender Mod x.y.z, Fabric Loader 0.x.y, Fabric API 0.x.y"
+      placeholder: "Fabric Loader 0.x.y, Fabric API 0.x.y"
     validations:
       required: true
 
