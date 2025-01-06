@@ -27,8 +27,6 @@ body:
       description: |
         If you're using Fabric, please also include the relevant Fabric API version.
       placeholder: "Fabric Loader 0.x.y, Fabric API 0.x.y"
-    validations:
-      required: true
 
   - type: textarea
     id: expected
