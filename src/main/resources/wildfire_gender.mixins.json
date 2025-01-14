@@ -2,6 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.wildfire.mixins",
+  "plugin": "com.moulberry.mixinconstraints.ConstraintsMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "ArmorStandEntityMixin"
@@ -13,12 +14,12 @@
     "accessors.EquipmentRendererAccessor",
     "accessors.TextureManagerAccessor",
     "accessors.TrimSpriteKeyConstructorAccessor",
-    "renderstate.LivingEntityRendererMixin",
-    "renderstate.LivingEntityRenderStateMixin",
-
     "cape.PlayerListEntryMixin",
+    "cape.SkinTexturesMixin",
     "cape.SkinTexturesWildfireImplMixin",
-    "cape.SkinTexturesMixin"
+    "devenv.ShowClientPlayerNametag",
+    "renderstate.LivingEntityRendererMixin",
+    "renderstate.LivingEntityRenderStateMixin"
   ],
   "injectors": {
     "defaultRequire": 1

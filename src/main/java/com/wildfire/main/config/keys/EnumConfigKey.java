@@ -16,36 +16,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.wildfire.main.config;
+package com.wildfire.main.config.keys;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import java.util.UUID;
 
-public class UUIDConfigKey extends ConfigKey<UUID> {
+import java.util.function.IntFunction;
 
-    public UUIDConfigKey(String key, UUID defaultValue) {
-        super(key, defaultValue);
-    }
+public class EnumConfigKey<TYPE extends Enum<TYPE>> extends ConfigKey<TYPE> {
+	private final IntFunction<TYPE> ordinal;
 
-    @Override
-    protected UUID read(JsonElement element) {
-        if (element.isJsonPrimitive()) {
-            JsonPrimitive primitive = element.getAsJsonPrimitive();
-            if (primitive.isString()) {
-                try {
-                    return UUID.fromString(primitive.getAsString());
-                } catch (Exception ignored) {
-                    //If we can't parse it then fallback to the default
-                }
-            }
-        }
-        return defaultValue;
-    }
+	public EnumConfigKey(String key, TYPE defaultValue, IntFunction<TYPE> ordinalMapper) {
+		super(key, defaultValue);
+		this.ordinal = ordinalMapper;
+	}
 
-    @Override
-    public void save(JsonObject object, UUID value) {
-        object.addProperty(key, value.toString());
-    }
+	@Override
+	protected TYPE read(JsonElement element) {
+		if(element instanceof JsonPrimitive prim && prim.isNumber()) {
+			return ordinal.apply(prim.getAsInt());
+		}
+		return defaultValue;
+	}
+
+	@Override
+	public void save(JsonObject object, TYPE value) {
+		object.addProperty(key, value.ordinal());
+	}
 }

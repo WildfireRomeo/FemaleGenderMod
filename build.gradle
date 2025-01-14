@@ -11,6 +11,7 @@ base {
 }
 
 repositories {
+	mavenCentral()
 	maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
 }
 
@@ -26,6 +27,10 @@ dependencies {
 	modImplementation fabricApi.module("fabric-rendering-v1", project.fabric_version)
 	modImplementation fabricApi.module("fabric-resource-loader-v0", project.fabric_version)
 	modRuntimeOnly fabricApi.module("fabric-registry-sync-v0", project.fabric_version)
+
+	// 'transitive = false' is necessary as gradle will otherwise try to pull in sponge mixin, which
+	// conflicts with the mixin version that fabric already provides
+	include(implementation("com.moulberry:mixinconstraints:1.0.2") { transitive = false })
 
 	// Allow logging into an actual Minecraft account in a dev env
 	// See https://github.com/DJtheRedstoner/DevAuth

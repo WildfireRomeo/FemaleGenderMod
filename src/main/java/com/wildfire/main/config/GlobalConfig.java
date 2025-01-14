@@ -20,6 +20,9 @@ package com.wildfire.main.config;
 
 import com.wildfire.main.config.enums.ShowPlayerListMode;
 import com.wildfire.main.config.enums.SyncVerbosity;
+import com.wildfire.main.config.keys.BooleanConfigKey;
+import com.wildfire.main.config.keys.EnumConfigKey;
+import com.wildfire.main.config.keys.StringConfigKey;
 
 public class GlobalConfig extends AbstractConfiguration {
     public static final GlobalConfig INSTANCE = new GlobalConfig();
@@ -28,8 +31,10 @@ public class GlobalConfig extends AbstractConfiguration {
         super(".", "wildfire_gender");
     }
 
-    // note: this option is not intended to be saved in any persistent manner
+    // this boolean is intended to only exist at runtime, and should not be saved or loaded in any persistent manner
     public static boolean RENDER_BREASTS = true;
+
+    // region Cloud Sync
 
     public static final BooleanConfigKey FIRST_TIME_LOAD = new BooleanConfigKey("firstTimeLoad", true);
     public static final BooleanConfigKey CLOUD_SYNC_ENABLED = new BooleanConfigKey("cloud_sync", false);
@@ -38,9 +43,15 @@ public class GlobalConfig extends AbstractConfiguration {
     public static final StringConfigKey CLOUD_SERVER = new StringConfigKey("cloud_server", "");
     public static final EnumConfigKey<SyncVerbosity> SYNC_VERBOSITY = new EnumConfigKey<>("sync_log_verbosity", SyncVerbosity.DEFAULT, SyncVerbosity.BY_ID);
 
+    // endregion
+
     public static final EnumConfigKey<ShowPlayerListMode> ALWAYS_SHOW_LIST = new EnumConfigKey<>("alwaysShowList", ShowPlayerListMode.MOD_UI_ONLY, ShowPlayerListMode.BY_ID);
 
     public static final BooleanConfigKey ARMOR_STAT = new BooleanConfigKey("armor_stat", true);
+
+    // Development environment-only toggle; forces the client player's nametag to always render when set to true,
+    // intended to allow for debugging nametag-related features.
+    public static final BooleanConfigKey DEBUG_SHOW_NAMETAG = new BooleanConfigKey("showClientPlayerNametag", false);
 
     static {
         INSTANCE.setDefault(FIRST_TIME_LOAD);
@@ -50,6 +61,7 @@ public class GlobalConfig extends AbstractConfiguration {
         INSTANCE.setDefault(SYNC_VERBOSITY);
         INSTANCE.setDefault(ALWAYS_SHOW_LIST);
         INSTANCE.setDefault(ARMOR_STAT);
+        // DEBUG_SHOW_NAMETAG is intentionally omitted as it's only ever used in a development environment
         if(!INSTANCE.exists()) {
             INSTANCE.save();
         }

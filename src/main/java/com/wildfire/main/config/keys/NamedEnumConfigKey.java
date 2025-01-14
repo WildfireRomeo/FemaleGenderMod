@@ -16,32 +16,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.wildfire.main.config;
+package com.wildfire.main.config.keys;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
+import java.util.function.Function;
 import java.util.function.IntFunction;
 
-public class EnumConfigKey<TYPE extends Enum<TYPE>> extends ConfigKey<TYPE> {
-	private final IntFunction<TYPE> ordinal;
+public class NamedEnumConfigKey<TYPE extends Enum<TYPE>> extends ConfigKey<TYPE> {
+	private final TYPE[] entries;
 
-	public EnumConfigKey(String key, TYPE defaultValue, IntFunction<TYPE> ordinalMapper) {
+	public NamedEnumConfigKey(String key, TYPE defaultValue, Class<TYPE> cls) {
 		super(key, defaultValue);
-		this.ordinal = ordinalMapper;
+		this.entries = cls.getEnumConstants();
 	}
 
 	@Override
 	protected TYPE read(JsonElement element) {
-		if(element instanceof JsonPrimitive prim && prim.isNumber()) {
-			return ordinal.apply(prim.getAsInt());
+		if(element instanceof JsonPrimitive prim && prim.isString()) {
+			var name = prim.getAsString();
+			for(var entry : entries) {
+				if(entry.name().equals(name)) return entry;
+			}
 		}
 		return defaultValue;
 	}
 
 	@Override
 	public void save(JsonObject object, TYPE value) {
-		object.addProperty(key, value.ordinal());
+		object.addProperty(key, value.name());
 	}
 }
