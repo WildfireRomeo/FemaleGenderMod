@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonWriter;
 import com.wildfire.main.WildfireGender;
+import com.wildfire.main.config.keys.ConfigKey;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -62,18 +63,24 @@ public abstract class AbstractConfiguration {
 		key.save(SAVE_VALUES, value);
 	}
 
+	public boolean toggle(ConfigKey<Boolean> key) {
+		var newVal = !get(key);
+		set(key, newVal);
+		return newVal;
+	}
+
 	public <TYPE> TYPE get(ConfigKey<TYPE> key) {
 		return key.read(SAVE_VALUES);
 	}
 
 	public <TYPE> void setDefault(ConfigKey<TYPE> key) {
-		if(!SAVE_VALUES.has(key.key)) {
-			set(key, key.defaultValue);
+		if(!SAVE_VALUES.has(key.getKey())) {
+			set(key, key.getDefault());
 		}
 	}
 
 	public void removeParameter(ConfigKey<?> key) {
-		removeParameter(key.key);
+		removeParameter(key.getKey());
 	}
 
 	public void removeParameter(String key) {

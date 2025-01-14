@@ -16,42 +16,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.wildfire.main.config;
+package com.wildfire.main.config.keys;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import java.util.UUID;
 
-public abstract class ConfigKey<TYPE> {
+public class UUIDConfigKey extends ConfigKey<UUID> {
 
-    protected final String key;
-    protected final TYPE defaultValue;
-
-    protected ConfigKey(String key, TYPE defaultValue) {
-        this.key = key;
-        this.defaultValue = defaultValue;
+    public UUIDConfigKey(String key, UUID defaultValue) {
+        super(key, defaultValue);
     }
 
-    public TYPE getDefault() {
-        return defaultValue;
-    }
-
-    public final TYPE read(JsonObject obj) {
-        JsonElement element = obj.get(key);
-        if (element != null) {
-            TYPE value = read(element);
-            if (validate(value)) {
-                //If the value is valid, return it otherwise return the default
-                return value;
+    @Override
+    protected UUID read(JsonElement element) {
+        if (element.isJsonPrimitive()) {
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            if (primitive.isString()) {
+                try {
+                    return UUID.fromString(primitive.getAsString());
+                } catch (Exception ignored) {
+                    //If we can't parse it then fallback to the default
+                }
             }
         }
         return defaultValue;
     }
 
-    protected abstract TYPE read(JsonElement element);
-
-    public abstract void save(JsonObject object, TYPE value);
-
-    public boolean validate(TYPE value) {
-        return value != null;
+    @Override
+    public void save(JsonObject object, UUID value) {
+        object.addProperty(key, value.toString());
     }
 }

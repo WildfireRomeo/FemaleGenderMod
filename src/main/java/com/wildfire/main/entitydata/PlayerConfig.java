@@ -24,7 +24,7 @@ import com.wildfire.main.WildfireGender;
 import com.wildfire.main.WildfireLocalization;
 import com.wildfire.main.cloud.CloudSync;
 import com.wildfire.main.cloud.SyncLog;
-import com.wildfire.main.config.ConfigKey;
+import com.wildfire.main.config.keys.ConfigKey;
 import com.wildfire.main.config.Configuration;
 import com.wildfire.main.Gender;
 import com.wildfire.main.config.GlobalConfig;
@@ -83,6 +83,7 @@ public class PlayerConfig extends EntityConfig {
 		this.cfg.setDefault(Configuration.VOICE_PITCH);
 
 		this.cfg.setDefault(Configuration.HOLIDAY_THEMES);
+		this.cfg.setDefault(Configuration.PRONOUNS);
 
 		// Real players always have a UUID of version 4; if this isn't the case, then this is undeniably
 		// an NPC player entity.

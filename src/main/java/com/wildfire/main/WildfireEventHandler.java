@@ -23,7 +23,9 @@ import com.wildfire.gui.GuiUtils;
 import com.wildfire.gui.screen.WardrobeBrowserScreen;
 import com.wildfire.gui.screen.WildfireFirstTimeSetupScreen;
 import com.wildfire.main.cloud.CloudSync;
+import com.wildfire.main.config.Configuration;
 import com.wildfire.main.config.GlobalConfig;
+import com.wildfire.main.config.enums.Pronoun;
 import com.wildfire.main.entitydata.BreastDataComponent;
 import com.wildfire.main.entitydata.EntityConfig;
 import com.wildfire.main.entitydata.PlayerConfig;
@@ -141,28 +143,49 @@ public final class WildfireEventHandler {
 		PlayerNametagRenderEvent.EVENT.register(WildfireEventHandler::onPlayerNametag);
 	}
 
+	private static void renderSmallNametag(Text tag, MatrixStack matrixStack, PlayerEntity player, Consumer<Text> renderHelper) {
+		matrixStack.push();
+		float translationAmt = switch(player.getPose()) {
+			case EntityPose.SWIMMING, EntityPose.GLIDING -> 0.333f;
+			case EntityPose.CROUCHING -> 0.8f;
+			case EntityPose.SLEEPING -> 0.125f;
+			case EntityPose.SITTING -> 0.275f;
+			default -> 0.95f;
+		};
+		matrixStack.translate(0f, translationAmt, 0f);
+		matrixStack.scale(0.5f, 0.5f, 0.5f);
+		renderHelper.accept(tag);
+		matrixStack.pop();
+		// shift the rest of the name tag up a little bit
+		matrixStack.translate(0f, 2.15F * 1.15F * 0.025F, 0f);
+	}
+
 	@Environment(EnvType.CLIENT)
 	private static void onPlayerNametag(PlayerEntityRenderState state, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, Consumer<Text> renderHelper) {
 		var player = ((RenderStateEntityCapture) state).getEntity() instanceof PlayerEntity p ? p : null;
 		if(player == null) return;
-		var nametag = WildfireGenderClient.getNametag(player.getUuid());
-		if(nametag == null) return;
 
-		matrixStack.push();
-		float translationAmt = switch(player.getPose()) {
-			case EntityPose.CROUCHING -> 0.8f;
-			case EntityPose.SLEEPING -> 0.125f;
-			case EntityPose.SWIMMING -> 0.3f;
-			case EntityPose.GLIDING -> 0.3f;
-			case EntityPose.SITTING -> 0.275f; //not tested; sitting on a pig doesn't work apparently.
-            default -> 0.95f;
-        };
-		matrixStack.translate(0f, translationAmt, 0f);
-		matrixStack.scale(0.5f, 0.5f, 0.5f);
-		renderHelper.accept(nametag);
-		matrixStack.pop();
-		// shift the rest of the name tag up a little bit
-		matrixStack.translate(0f, 2.15F * 1.15F * 0.025F, 0f);
+		var lines = new ArrayList<Text>();
+		var config = WildfireGender.getPlayerById(player.getUuid());
+
+		var pronouns = config != null ? Pronoun.format(config.getConfig().get(Configuration.PRONOUNS)) : null;
+		if(pronouns != null) {
+			lines.add(Text.literal(pronouns).formatted(Formatting.GRAY));
+		}
+
+		var contributorTag = WildfireGenderClient.getNametag(player.getUuid());
+		if(contributorTag != null) {
+			lines.add(contributorTag);
+		}
+
+		var iterator = lines.iterator();
+		while(iterator.hasNext()) {
+			var line = iterator.next();
+			renderSmallNametag(line, matrixStack, player, renderHelper);
+			if(iterator.hasNext()) {
+				matrixStack.translate(0f, 2.15F * 1.15F * 0.025F, 0f);
+			}
+		}
 	}
 
 	@Environment(EnvType.CLIENT)

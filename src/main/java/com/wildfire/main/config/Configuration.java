@@ -18,6 +18,9 @@
 
 package com.wildfire.main.config;
 
+import com.wildfire.main.config.enums.Pronoun;
+import com.wildfire.main.config.keys.*;
+
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
@@ -44,8 +47,8 @@ public class Configuration extends AbstractConfiguration {
 
 	public static final FloatConfigKey VOICE_PITCH = new FloatConfigKey("voice_pitch", 1F, 0.8f, 1.2f);
 
-	//Render holiday themes on the player.
 	public static final BooleanConfigKey HOLIDAY_THEMES = new BooleanConfigKey("holiday_themes", true);
+	public static final SizedListConfigKey<Pronoun> PRONOUNS = new SizedListConfigKey<>("pronouns", 2, new NamedEnumConfigKey<>("", null, Pronoun.class));
 
 	public Configuration(String cfgName) {
 		super(CONFIG_DIR, cfgName);
